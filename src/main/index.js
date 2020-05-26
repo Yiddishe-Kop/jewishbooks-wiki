@@ -22,7 +22,10 @@ function createWindow() {
     width: 1400,
     height: 950,
     useContentSize: true,
+    backgroundColor: '#e2e8f0',
+    titleBarStyle: 'hiddenInset',
     webPreferences: {
+      devTools: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true
     }

@@ -1,57 +1,56 @@
 <template>
   <div class="flex flex-col h-screen overflow-hidden bg-gray-300" dir="rtl">
     <div class="pb-32 bg-gray-800">
-      <nav class="bg-gray-800">
+      <nav class="bg-gray-800 border-b border-gray-700 titlebar">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div class="border-b border-gray-700">
-            <div class="flex items-center justify-between h-16 px-4 sm:px-0">
-              <div class="flex items-center">
-                <logo class="flex-shrink-0 w-16" />
-                <div class="hidden md:block">
-                  <div class="flex items-baseline ml-10 space-x-4">
-                    <router-link
-                      v-for="link in links"
-                      :key="link.to"
-                      :to="link.to"
-                      exact-active-class="text-white bg-gray-900"
-                      class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md focus:focus:outline-none focus:text-white focus:bg-gray-700 hover:text-white hover:bg-gray-700"
-                      >{{ link.label }}</router-link
-                    >
-                  </div>
+          <div class="flex items-center justify-between h-16 px-4 sm:px-0">
+            <div class="flex items-center">
+              <logo class="flex-shrink-0 w-16" />
+              <div class="hidden md:block">
+                <div class="flex items-baseline ml-10 space-x-4">
+                  <router-link
+                    v-for="link in links"
+                    :key="link.to"
+                    :to="link.to"
+                    exact-active-class="text-white bg-gray-900"
+                    class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md focus:focus:outline-none focus:text-white focus:bg-gray-700 hover:text-white hover:bg-gray-700"
+                    >{{ link.label }}</router-link
+                  >
                 </div>
               </div>
-              <div class="hidden md:block">
-                <div class="flex items-center ml-4 md:ml-6">
-                  <button
-                    class="p-1 text-gray-400 border-2 border-transparent rounded-full hover:text-white focus:focus:outline-none focus:text-white focus:bg-gray-700"
-                    aria-label="Notifications"
-                  >
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                        clip-rule="evenodd"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
+            </div>
+            <div class="hidden md:block">
+              <div class="flex items-center ml-4 md:ml-6">
+                <button
+                  class="p-1 text-gray-400 border-2 border-transparent rounded-full hover:text-white focus:focus:outline-none focus:text-white focus:bg-gray-700"
+                  aria-label="Notifications"
+                >
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </button>
 
-                  <!-- Profile dropdown -->
-                  <div class="relative mr-3">
-                    <div>
-                      <button
-                        class="flex items-center max-w-xs text-sm text-white rounded-full focus:focus:outline-none focus:shadow-solid"
-                        id="user-menu"
-                        aria-label="User menu"
-                        aria-haspopup="true"
-                      >
-                        <img
-                          class="w-8 h-8 rounded-full shadow-outline-gray"
-                          src="https://halpern.yiddishe-kop.com/img/users/NQ5WccXhHPSqLDUbsKWQN6VGMTgMA6dRAJvsRzB9.jpeg/656455b5e11f1cb983323323506df3e213b27167921c9ff70ab04a333d60adfb/NQ5WccXhHPSqLDUbsKWQN6VGMTgMA6dRAJvsRzB9.jpg?w=40&h=40&fit=crop"
-                          alt
-                        />
-                      </button>
-                    </div>
-                    <!--
+                <!-- Profile dropdown -->
+                <div class="relative mr-3">
+                  <div>
+                    <button
+                      class="flex items-center max-w-xs text-sm text-white rounded-full focus:focus:outline-none focus:shadow-solid"
+                      id="user-menu"
+                      aria-label="User menu"
+                      aria-haspopup="true"
+                    >
+                      <img
+                        class="w-8 h-8 rounded-full shadow-outline-gray"
+                        src="https://halpern.yiddishe-kop.com/img/users/NQ5WccXhHPSqLDUbsKWQN6VGMTgMA6dRAJvsRzB9.jpeg/656455b5e11f1cb983323323506df3e213b27167921c9ff70ab04a333d60adfb/NQ5WccXhHPSqLDUbsKWQN6VGMTgMA6dRAJvsRzB9.jpg?w=40&h=40&fit=crop"
+                        alt
+                      />
+                    </button>
+                  </div>
+                  <!--
                     Profile dropdown panel, show/hide based on dropdown state.
 
                     Entering: "transition ease-out duration-100"
@@ -61,31 +60,30 @@
                       From: "transform opacity-100 scale-100"
                       To: "transform opacity-0 scale-95"
                     -->
-                    <div class="absolute right-0 hidden w-48 mt-2 origin-top-right rounded-md shadow-lg">
-                      <div class="py-1 bg-white rounded-md shadow-xs">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
-                      </div>
+                  <div class="absolute right-0 hidden w-48 mt-2 origin-top-right rounded-md shadow-lg">
+                    <div class="py-1 bg-white rounded-md shadow-xs">
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="flex -mr-2 md:hidden">
-                <!-- Mobile menu button -->
-                <button
-                  class="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:bg-gray-700 focus:text-white"
-                >
-                  <!-- Menu open: "hidden", Menu closed: "block" -->
-                  <svg class="block w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                  <!-- Menu open: "block", Menu closed: "hidden" -->
-                  <svg class="hidden w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
+            </div>
+            <div class="flex -mr-2 md:hidden">
+              <!-- Mobile menu button -->
+              <button
+                class="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:bg-gray-700 focus:text-white"
+              >
+                <!-- Menu open: "hidden", Menu closed: "block" -->
+                <svg class="block w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <!-- Menu open: "block", Menu closed: "hidden" -->
+                <svg class="hidden w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -190,4 +188,9 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
+
+.titlebar {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
 </style>
