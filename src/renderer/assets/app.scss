@@ -1,6 +1,66 @@
 /*! purgecss start ignore */
 @tailwind base;
 @tailwind components;
+
+// Page transition
+.page-enter-active {
+  transition: all 0.3s ease-in;
+}
+.page-leave-active {
+  transition: none;
+}
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.transition {
+  transition: all 0.3s ease;
+}
+
+// lists transition
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.vueWikitext {
+  -moz-osx-font-smoothing: grayscale;
+  h1 {
+    @apply mt-6 mb-2 text-2xl font-extrabold text-gray-800;
+  }
+  h2 {
+    @apply mt-6 mb-2 text-xl font-bold text-gray-800;
+  }
+  h3 {
+    @apply mt-5 mb-1 font-bold text-lg;
+  }
+  p {
+    @apply leading-7 mb-4;
+  }
+  a {
+    @apply underline;
+  }
+  blockquote {
+    @apply mt-4 mb-5 py-3 px-3 bg-blue-100 border-l-4 border-blue-400 rounded-r-md;
+    p {
+      @apply mb-0;
+    }
+  }
+  ol {
+    @apply my-5 pl-5 list-decimal;
+  }
+  ul {
+    @apply my-5 pl-5 list-disc;
+  }
+  img {
+    @apply my-8 rounded-md;
+  }
+}
 /*! purgecss end ignore */
 
 @tailwind utilities;

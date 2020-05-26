@@ -1,68 +1,132 @@
 <template>
   <div class="py-8">
-    <h1>ברוכים הבאים למגרש המשחקים שלנו!</h1>
-    <input
-      @keyup.enter="searchWikipedia"
-      v-model="query"
-      class="w-full px-4 py-2 mt-2 text-white bg-gray-700 rounded-md shadow"
-      placeholder="חפש כל מה שעולה על דעתך..."
-    />
+    <h1>כאן אפשר לערוך דף ויקי גם אופליין</h1>
 
-    <section class="mt-4 wiki">
-      <div class="p-3 mt-2 overflow-x-auto rounded-lg shadow">
-        <div v-if="!!result.parse" class="grid grid-cols-2 gap-8">
-          <textarea v-model="wikitext"></textarea>
-          <vue-wikitext :source="wikitext" />
-        </div>
-        <div
-          v-else-if="!!result.error"
-          v-html="result.error.info"
-          class="my-16 text-sm text-center text-red-500"
-        ></div>
-        <div v-else class="my-16 text-center text-gray-400">התוצאות יוצגו כאן</div>
+    <div class="flex items-center justify-between space-x-2">
+      <div>
+        <h1 class="text-2xl font-black text-gray-800">{{ article.title }}</h1>
       </div>
+      <div class="flex">
+        <button
+          @click="saveChangesLocal"
+          class="flex items-center p-2 ml-2 text-green-500 transition bg-green-100 rounded-md hover:bg-green-200"
+        >
+          <icon name="save" class="inline-block w-5 ml-2" />
+          <span>שמור שינויים</span>
+        </button>
+        <button
+          @click="syncWikiArticle"
+          class="flex items-center p-2 text-blue-500 transition bg-blue-100 rounded-md hover:bg-blue-200"
+        >
+          <icon name="refresh" class="inline-block w-5 ml-2" />
+          <span>סנכרן שינויים</span>
+        </button>
+      </div>
+    </div>
+
+    <section class="mt-12 wiki">
+      <div v-if="!!wikitext" class="grid grid-cols-2 gap-8">
+        <div class="relative p-1 border border-green-700 rounded">
+          <span
+            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-green-100 transform -translate-y-1/2 bg-green-700 rounded-full"
+            >עריכה</span
+          >
+          <textarea v-model="wikitext" class="w-full h-full p-4"></textarea>
+        </div>
+        <div class="relative border border-blue-700 rounded">
+          <span
+            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-blue-100 transform -translate-y-1/2 bg-blue-700 rounded-full"
+            >תצוגה מקדימה</span
+          >
+          <vue-wikitext :source="wikitext" class="p-4" />
+        </div>
+      </div>
+      <div v-else-if="!!error" v-html="error" class="my-16 text-sm text-center text-red-500"></div>
+      <div v-else class="my-16 text-center text-gray-400">התוצאות יוצגו כאן</div>
     </section>
   </div>
 </template>
 
 <script>
+import { Article } from '../../db';
+import { mapState, mapActions } from 'vuex';
+
 export default {
-  name: "wikipedia",
+  name: 'wikipedia',
   data() {
     return {
-      query: "מסכת שבת",
-      wikitext: "",
-      result: {}
+      query: 'מסכת שבת',
+      article: undefined,
+      wikitext: '',
+      error: '',
     };
   },
-  methods: {
-    async searchWikipedia() {
-      const URL = "wiki.jewishbooks.org.il/mediawiki/api.php";
-      let res = await (
-        await fetch(
-          `https://${URL}?
-            action=parse&
-            page=${this.query}&
-            format=json&
-            utf8=1&
-            prop=wikitext&
-            maxlag=500&
-            origin=*`,
-          {
-            headers: {
-              "Content-Type": "application/json; charset=UTF-8",
-              Origin: "http://localhost:3000/wikipedia"
-            }
-          }
-        )
-      ).json();
-      this.result = res;
-      this.wikitext = res.parse.wikitext["*"];
-    }
+  computed: {
+    ...mapState('Articles', ['articles']),
+    ...mapState('Bot', ['Wiki']),
   },
-  mounted() {
-    this.searchWikipedia();
-  }
+  methods: {
+    ...mapActions('Articles', ['refreshArticles']),
+    getArticleFromWiki() {
+      this.Wiki.getArticle(this.query, (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        this.wikitext = data;
+      });
+    },
+    async showArticle() {
+      const articleId = this.$route.params.id;
+      if (articleId) {
+        const article = await Article.findAll({
+          where: {
+            id: articleId,
+          },
+        });
+        console.log(article[0]);
+
+        this.article = article[0];
+        this.query = article[0].title;
+        this.wikitext = article[0].body;
+      }
+    },
+    async saveChangesLocal() {
+      await Article.update(
+        {
+          body: this.wikitext,
+        },
+        {
+          where: {
+            id: this.article.id,
+          },
+        }
+      );
+      this.refreshArticles();
+    },
+    loginToWiki(callback) {
+      this.Wiki.logIn('Yiddishe Kop', '82117907', callback);
+    },
+    async syncWikiArticle() {
+      await this.saveChangesLocal();
+      this.loginToWiki((err, data) => {
+        if (err) return;
+        this.Wiki.edit(
+          this.article.title,
+          this.wikitext,
+          '!!!נערך ע״י תוכנה שפותח ע״י היידישע קאפ!!!',
+          false,
+          (err, data) => {
+            if (err) return;
+            console.log({ data });
+          }
+        );
+      });
+    },
+  },
+  async mounted() {
+    this.showArticle();
+  },
 };
 </script>
 

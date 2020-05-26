@@ -1,0 +1,4 @@
+{
+  "vetur.experimental.templateInterpolationService": true,
+  "vetur.format.defaultFormatter.html": "prettier",
+}

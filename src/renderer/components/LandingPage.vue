@@ -1,134 +1,125 @@
 <template>
-  <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue" />
-    <main>
-      <div class="left-side">
-        <span class="title">Welcome to your new project!</span>
-        <system-information></system-information>
-      </div>
+  <div>
+    <h1 class="font-semibold">עמודים שמורים</h1>
+    <ul>
+      <transition-group name="list" class="grid grid-cols-2 gap-4 mt-6 md:grid-cols-3 lg:grid-cols-4" appear>
+        <article-card
+          v-for="article in articles"
+          :key="article.dataValues.id"
+          :article="article.dataValues"
+          @delete="deleteArticle(article.dataValues)"
+        />
+      </transition-group>
+    </ul>
 
-      <div class="right-side">
-        <div class="doc">
-          <div class="title">Getting Started</div>
-          <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
-          </p>
-          <button
-            @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')"
-          >Read the Docs</button>
-          <br />
-          <br />
-        </div>
-        <div class="doc">
-          <div class="title alt">Other Documentation</div>
-          <button class="alt" @click="open('https://electron.atom.io/docs/')">Electron</button>
-          <button class="alt" @click="open('https://vuejs.org/v2/guide/')">Vue.js</button>
-          <router-link to="/wiki">Wiki</router-link>
-        </div>
+    <section class="mt-12">
+      <h1 class="font-semibold">חיפוש עמודים</h1>
+      <div class="flex items-center mt-2 mb-6 space-x-2">
+        <input
+          @keyup.enter="searchWiki()"
+          v-model="query"
+          class="w-full form-input"
+          placeholder="חפש כל מה שעולה על דעתך..."
+        />
       </div>
-    </main>
+      <ul v-if="searchResults.length && !isLoading">
+        <transition-group name="list" class="grid grid-cols-2 gap-4 mt-6 md:grid-cols-3 lg:grid-cols-4" appear>
+          <li
+            v-for="result in searchResults"
+            :key="result.pageid"
+            class="relative p-4 transition bg-gray-200 rounded-lg hover:bg-blue-50"
+          >
+            <h2>{{ result.title }}</h2>
+            <button
+              @click="saveArticleOffline(result)"
+              class="relative z-20 p-2 mt-3 text-sm font-semibold text-green-500 transition bg-green-100 rounded-md focus:outline-none hover:bg-green-200"
+            >
+              <icon name="download" class="w-6" />
+            </button>
+          </li>
+        </transition-group>
+      </ul>
+      <div v-else class="px-12 py-20 text-center border-4 border-gray-200 rounded-lg">
+        <p v-if="!isLoading" class="text-gray-400">חפש משהו!</p>
+        <loader v-else-if="isLoading && !error" />
+        <p v-else-if="!!error" class="text-gray-400">{{ error }}</p>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import SystemInformation from "./LandingPage/SystemInformation";
+import { Article } from '../../db';
+import { mapState, mapActions } from 'vuex';
+import ArticleCard from '../components/ArticleCard';
 
 export default {
-  name: "landing-page",
-  components: { SystemInformation },
+  name: 'landing-page',
+  components: { ArticleCard },
+  data() {
+    return {
+      query: 'סוכה',
+      isLoading: false,
+      searchResults: [],
+      error: '',
+    };
+  },
+  computed: {
+    ...mapState('Articles', ['articles']),
+    ...mapState('Bot', ['Wiki']),
+  },
   methods: {
+    ...mapActions('Articles', ['refreshArticles']),
     open(link) {
       this.$electron.shell.openExternal(link);
-    }
-  }
+    },
+    searchWiki() {
+      this.error = '';
+      this.isLoading = true;
+      this.Wiki.search(this.query, (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        if (!data.length) {
+          this.error = 'לא נמצאו תוצאות לחיפוש שלכם.';
+          return;
+        }
+
+        this.searchResults = data;
+        this.isLoading = false;
+      });
+    },
+    async saveArticleOffline(article) {
+      this.Wiki.getArticle(article.title, async (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        const newArticle = await Article.create({
+          title: article.title,
+          body: data,
+        });
+        this.$store.state.Articles.articles.push(newArticle);
+      });
+    },
+    // async refreshArticles() {
+    //   const allArticles = await Article.findAll();
+    //   console.log({ allArticles });
+    //   // this.$store.commit("Articles/SET_ARTICLES", allArticles);
+    //   this.$store.state.Articles.articles = allArticles;
+    // },
+    async deleteArticle(article) {
+      await Article.destroy({
+        where: {
+          id: article.id,
+        },
+      });
+      this.refreshArticles();
+    },
+  },
+  async mounted() {
+    this.refreshArticles();
+  },
 };
 </script>
-
-<style>
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: "Source Sans Pro", sans-serif;
-}
-
-#wrapper {
-  background: radial-gradient(
-    ellipse at top left,
-    rgba(255, 255, 255, 1) 40%,
-    rgba(229, 229, 229, 0.9) 100%
-  );
-  height: 100vh;
-  padding: 60px 80px;
-  width: 100vw;
-}
-
-#logo {
-  height: auto;
-  margin-bottom: 20px;
-  width: 420px;
-}
-
-main {
-  display: flex;
-  justify-content: space-between;
-}
-
-main > div {
-  flex-basis: 50%;
-}
-
-.left-side {
-  display: flex;
-  flex-direction: column;
-}
-
-.welcome {
-  color: #555;
-  font-size: 23px;
-  margin-bottom: 10px;
-}
-
-.title {
-  color: #2c3e50;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.title.alt {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.doc p {
-  color: black;
-  margin-bottom: 10px;
-}
-
-.doc button {
-  font-size: 0.8em;
-  cursor: pointer;
-  outline: none;
-  padding: 0.75em 2em;
-  border-radius: 2em;
-  display: inline-block;
-  color: #fff;
-  background-color: #4fc08d;
-  transition: all 0.15s ease;
-  box-sizing: border-box;
-  border: 1px solid #4fc08d;
-}
-
-.doc button.alt {
-  color: #42b983;
-  background-color: transparent;
-}
-</style>

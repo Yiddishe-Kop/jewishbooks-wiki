@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/pages/wiki').default
     },
     {
+      path: '/articles/:id',
+      name: 'show-article',
+      component: require('@/pages/wiki').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

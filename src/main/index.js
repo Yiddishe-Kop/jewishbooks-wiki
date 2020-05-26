@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron'
+import store from '../renderer/store'
 
 /**
  * Set `__static` path to static files in production
@@ -40,6 +41,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+app.on('before-quit', () => {
+  // sequelize.close()
 })
 
 app.on('activate', () => {

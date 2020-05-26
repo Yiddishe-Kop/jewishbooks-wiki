@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-gray-300">
+  <div class="flex flex-col h-screen overflow-hidden bg-gray-300" dir="rtl">
     <div class="pb-32 bg-gray-800">
       <nav class="bg-gray-800">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -14,15 +14,16 @@
                       :key="link.to"
                       :to="link.to"
                       exact-active-class="text-white bg-gray-900"
-                      class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md focus:outline-none focus:text-white focus:bg-gray-700 hover:text-white hover:bg-gray-700"
-                    >{{ link.label }}</router-link>
+                      class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md focus:focus:outline-none focus:text-white focus:bg-gray-700 hover:text-white hover:bg-gray-700"
+                      >{{ link.label }}</router-link
+                    >
                   </div>
                 </div>
               </div>
               <div class="hidden md:block">
                 <div class="flex items-center ml-4 md:ml-6">
                   <button
-                    class="p-1 text-gray-400 border-2 border-transparent rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-gray-700"
+                    class="p-1 text-gray-400 border-2 border-transparent rounded-full hover:text-white focus:focus:outline-none focus:text-white focus:bg-gray-700"
                     aria-label="Notifications"
                   >
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -35,10 +36,10 @@
                   </button>
 
                   <!-- Profile dropdown -->
-                  <div class="relative ml-3">
+                  <div class="relative mr-3">
                     <div>
                       <button
-                        class="flex items-center max-w-xs text-sm text-white rounded-full focus:outline-none focus:shadow-solid"
+                        class="flex items-center max-w-xs text-sm text-white rounded-full focus:focus:outline-none focus:shadow-solid"
                         id="user-menu"
                         aria-label="User menu"
                         aria-haspopup="true"
@@ -60,22 +61,11 @@
                       From: "transform opacity-100 scale-100"
                       To: "transform opacity-0 scale-95"
                     -->
-                    <div
-                      class="absolute right-0 hidden w-48 mt-2 origin-top-right rounded-md shadow-lg"
-                    >
+                    <div class="absolute right-0 hidden w-48 mt-2 origin-top-right rounded-md shadow-lg">
                       <div class="py-1 bg-white rounded-md shadow-xs">
-                        <a
-                          href="#"
-                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >Your Profile</a>
-                        <a
-                          href="#"
-                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >Settings</a>
-                        <a
-                          href="#"
-                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >Sign out</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
                       </div>
                     </div>
                   </div>
@@ -84,30 +74,15 @@
               <div class="flex -mr-2 md:hidden">
                 <!-- Mobile menu button -->
                 <button
-                  class="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white"
+                  class="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:bg-gray-700 focus:text-white"
                 >
                   <!-- Menu open: "hidden", Menu closed: "block" -->
                   <svg class="block w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                   <!-- Menu open: "block", Menu closed: "hidden" -->
-                  <svg
-                    class="hidden w-6 h-6"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
+                  <svg class="hidden w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
@@ -124,24 +99,29 @@
           <div class="px-2 py-3 sm:px-3">
             <a
               href="#"
-              class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md focus:outline-none focus:text-white focus:bg-gray-700"
-            >Dashboard</a>
+              class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md focus:focus:outline-none focus:text-white focus:bg-gray-700"
+              >Dashboard</a
+            >
             <a
               href="#"
-              class="block px-3 py-2 mt-1 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            >Team</a>
+              class="block px-3 py-2 mt-1 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:text-white focus:bg-gray-700"
+              >Team</a
+            >
             <a
               href="#"
-              class="block px-3 py-2 mt-1 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            >Projects</a>
+              class="block px-3 py-2 mt-1 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:text-white focus:bg-gray-700"
+              >Projects</a
+            >
             <a
               href="#"
-              class="block px-3 py-2 mt-1 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            >Calendar</a>
+              class="block px-3 py-2 mt-1 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:text-white focus:bg-gray-700"
+              >Calendar</a
+            >
             <a
               href="#"
-              class="block px-3 py-2 mt-1 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            >Reports</a>
+              class="block px-3 py-2 mt-1 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:text-white focus:bg-gray-700"
+              >Reports</a
+            >
           </div>
           <div class="pt-4 pb-3 border-t border-gray-700">
             <div class="flex items-center px-5">
@@ -157,38 +137,34 @@
                 <div class="mt-1 text-sm font-medium leading-none text-gray-400">tom@example.com</div>
               </div>
             </div>
-            <div
-              class="px-2 mt-3"
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="user-menu"
-            >
+            <div class="px-2 mt-3" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
               <a
                 href="#"
-                class="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+                class="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:text-white focus:bg-gray-700"
                 role="menuitem"
-              >Your Profile</a>
+                >Your Profile</a
+              >
               <a
                 href="#"
-                class="block px-3 py-2 mt-1 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+                class="block px-3 py-2 mt-1 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:text-white focus:bg-gray-700"
                 role="menuitem"
-              >Settings</a>
+                >Settings</a
+              >
               <a
                 href="#"
-                class="block px-3 py-2 mt-1 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+                class="block px-3 py-2 mt-1 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:focus:outline-none focus:text-white focus:bg-gray-700"
                 role="menuitem"
-              >Sign out</a>
+                >Sign out</a
+              >
             </div>
           </div>
         </div>
       </nav>
-      <header class="px-4 py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">Title</header>
+      <header class="px-4 py-10 mx-auto text-2xl font-extrabold text-gray-200 max-w-7xl sm:px-6 lg:px-8">כותרת</header>
     </div>
 
-    <main class="flex-1 -mt-32">
-      <div
-        class="px-4 px-5 py-6 pb-12 mx-auto bg-white rounded-lg shadow max-w-7xl sm:px-6 lg:px-8"
-      >
+    <main class="flex-1 px-6 -mt-32">
+      <div class="px-4 px-5 py-6 pb-12 mx-auto bg-white rounded-lg shadow max-w-7xl sm:px-6 lg:px-8">
         <slot />
       </div>
     </main>
@@ -196,22 +172,22 @@
 </template>
 
 <script>
-import Logo from "../components/Logo";
+import Logo from '../components/Logo';
 export default {
   components: { Logo },
   data() {
     return {
       links: [
         {
-          to: "/",
-          label: "Home"
+          to: '/',
+          label: 'בית',
         },
-        {
-          to: "/wiki",
-          label: "Wikipedia"
-        }
-      ]
+      ],
     };
-  }
+  },
 };
 </script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
+</style>
