@@ -16,7 +16,7 @@ export default new Router({
       component: require('@/pages/wiki').default
     },
     {
-      path: '/articles/:id',
+      path: '/articles/:title',
       name: 'show-article',
       component: require('@/pages/wiki').default
     },

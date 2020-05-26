@@ -1,23 +1,54 @@
-import { Article } from '../../../db';
+const Storage = require('electron-store');
+
+const schema = {
+  articles: {
+    type: 'array',
+    default: []
+  },
+};
+
+const storage = new Storage({
+  schema,
+  name: 'articles' // filename
+});
+
 const state = {
-  articles: []
+  articles: storage.get('articles')
 }
 
 const mutations = {
   SET_ARTICLES(state, articles) {
     state.articles = articles
   },
+  CREATE_ARTICLE(state, article) {
+    state.articles.push(article)
+    storage.set('articles', state.articles)
+  },
+  UPDATE_ARTICLE(state, article) {
+    state.articles = [
+      ...state.articles.filter(a => a.title != article.title),
+      article
+    ]
+    storage.set('articles', state.articles)
+  },
+  DELETE_ARTICLE(state, title) {
+    state.articles = state.articles.filter(a => a.title != title)
+    storage.set('articles', state.articles)
+  }
 }
 
 const actions = {
   setArticles: ({ commit }, articles) => {
-    // do something async
     commit('SET_ARTICLES', articles)
   },
-  refreshArticles({ commit }) {
-    const allArticles = Article.findAll().then(allArticles => {
-      commit('SET_ARTICLES', allArticles)
-    });
+  store({ commit }, article) {
+    commit('CREATE_ARTICLE', article)
+  },
+  update({ commit }, article) {
+    commit('UPDATE_ARTICLE', article)
+  },
+  destroy({ commit }, title) {
+    commit('DELETE_ARTICLE', title)
   }
 }
 

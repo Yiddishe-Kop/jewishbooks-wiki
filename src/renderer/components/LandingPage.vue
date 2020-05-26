@@ -1,16 +1,19 @@
 <template>
   <div>
     <h1 class="font-semibold">עמודים שמורים</h1>
-    <ul>
+    <ul v-if="articles.length">
       <transition-group name="list" class="grid grid-cols-2 gap-4 mt-6 md:grid-cols-3 lg:grid-cols-4" appear>
         <article-card
           v-for="article in articles"
-          :key="article.dataValues.id"
-          :article="article.dataValues"
-          @delete="deleteArticle(article.dataValues)"
+          :key="article.title"
+          :article="article"
+          @delete="destroy(article.title)"
         />
       </transition-group>
     </ul>
+    <div v-else class="py-16 text-center rounded-lg bg-gray-80">
+      <p>עמודים שהורדת יוצגו כאן</p>
+    </div>
 
     <section class="mt-12">
       <h1 class="font-semibold">חיפוש עמודים</h1>
@@ -31,11 +34,13 @@
           >
             <h2>{{ result.title }}</h2>
             <button
+              v-if="notYetSaved(result)"
               @click="saveArticleOffline(result)"
-              class="relative z-20 p-2 mt-3 text-sm font-semibold text-green-500 transition bg-green-100 rounded-md focus:outline-none hover:bg-green-200"
+              class="relative z-20 p-2 mt-3 text-sm font-semibold text-blue-500 transition bg-blue-100 rounded-md focus:outline-none hover:bg-blue-200"
             >
               <icon name="download" class="w-6" />
             </button>
+            <icon v-else name="check-circle" class="w-8 p-1 mt-3 text-green-500 rounded-full bg-green-50" />
           </li>
         </transition-group>
       </ul>
@@ -49,7 +54,6 @@
 </template>
 
 <script>
-import { Article } from '../../db';
 import { mapState, mapActions } from 'vuex';
 import ArticleCard from '../components/ArticleCard';
 
@@ -66,17 +70,16 @@ export default {
   },
   computed: {
     ...mapState('Articles', ['articles']),
-    ...mapState('Bot', ['Wiki']),
   },
   methods: {
-    ...mapActions('Articles', ['refreshArticles']),
+    ...mapActions('Articles', ['refreshArticles', 'store', 'destroy']),
     open(link) {
       this.$electron.shell.openExternal(link);
     },
     searchWiki() {
       this.error = '';
       this.isLoading = true;
-      this.Wiki.search(this.query, (err, data) => {
+      this.$wiki.search(this.query, (err, data) => {
         if (err) {
           console.error(err);
           return;
@@ -90,36 +93,24 @@ export default {
         this.isLoading = false;
       });
     },
+    notYetSaved(article) {
+      return !this.articles.some(a => a.title == article.title);
+    },
     async saveArticleOffline(article) {
-      this.Wiki.getArticle(article.title, async (err, data) => {
+      this.$wiki.getArticle(article.title, async (err, data) => {
         if (err) {
           console.error(err);
           return;
         }
-        const newArticle = await Article.create({
+        this.store({
           title: article.title,
           body: data,
         });
-        this.$store.state.Articles.articles.push(newArticle);
       });
-    },
-    // async refreshArticles() {
-    //   const allArticles = await Article.findAll();
-    //   console.log({ allArticles });
-    //   // this.$store.commit("Articles/SET_ARTICLES", allArticles);
-    //   this.$store.state.Articles.articles = allArticles;
-    // },
-    async deleteArticle(article) {
-      await Article.destroy({
-        where: {
-          id: article.id,
-        },
-      });
-      this.refreshArticles();
     },
   },
   async mounted() {
-    this.refreshArticles();
+    this.searchWiki();
   },
 };
 </script>

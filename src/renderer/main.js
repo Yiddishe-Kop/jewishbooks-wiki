@@ -4,6 +4,7 @@ import axios from 'axios'
 import App from './App'
 import router from './router'
 import store from './store'
+import Wiki from './helpers/wiki'
 
 import Loader from './components/ui/Loader'
 import Icon from './components/ui/Icon'
@@ -16,6 +17,7 @@ Vue.config.productionTip = false
 Vue.use(VueWikitext)
 Vue.component('loader', Loader)
 Vue.component('icon', Icon)
+Vue.prototype.$wiki = Wiki
 
 /* eslint-disable no-new */
 new Vue({

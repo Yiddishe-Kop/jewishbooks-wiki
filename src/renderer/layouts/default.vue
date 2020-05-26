@@ -163,7 +163,7 @@
       <header class="px-4 py-10 mx-auto text-2xl font-extrabold text-gray-200 max-w-7xl sm:px-6 lg:px-8">כותרת</header>
     </div>
 
-    <main class="flex-1 px-6 -mt-32">
+    <main class="flex-1 px-6 -mt-32 overflow-auto">
       <div class="px-4 px-5 py-6 pb-12 mx-auto bg-white rounded-lg shadow max-w-7xl sm:px-6 lg:px-8">
         <slot />
       </div>

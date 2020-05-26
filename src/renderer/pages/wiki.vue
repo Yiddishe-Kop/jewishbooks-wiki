@@ -1,10 +1,10 @@
 <template>
   <div class="py-8">
-    <h1>כאן אפשר לערוך דף ויקי גם אופליין</h1>
+    <p class="text-gray-600">כאן אפשר לערוך דף ויקי גם אופליין</p>
 
     <div class="flex items-center justify-between space-x-2">
       <div>
-        <h1 class="text-2xl font-black text-gray-800">{{ article.title }}</h1>
+        <h1 class="text-3xl font-black text-gray-800">{{ article.title }}</h1>
       </div>
       <div class="flex">
         <button
@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import { Article } from '../../db';
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -56,62 +55,39 @@ export default {
   data() {
     return {
       query: 'מסכת שבת',
-      article: undefined,
+      article: {},
       wikitext: '',
       error: '',
     };
   },
   computed: {
     ...mapState('Articles', ['articles']),
-    ...mapState('Bot', ['Wiki']),
   },
   methods: {
-    ...mapActions('Articles', ['refreshArticles']),
-    getArticleFromWiki() {
-      this.Wiki.getArticle(this.query, (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        this.wikitext = data;
-      });
-    },
-    async showArticle() {
-      const articleId = this.$route.params.id;
-      if (articleId) {
-        const article = await Article.findAll({
-          where: {
-            id: articleId,
-          },
-        });
-        console.log(article[0]);
+    ...mapActions('Articles', ['update']),
+    showArticle() {
+      const articleTitle = this.$route.params.title.replace(/\-/g, '/');
+      if (articleTitle) {
+        const article = this.articles.find(a => a.title == articleTitle);
 
-        this.article = article[0];
-        this.query = article[0].title;
-        this.wikitext = article[0].body;
+        this.article = article;
+        this.wikitext = article.body;
       }
     },
-    async saveChangesLocal() {
-      await Article.update(
-        {
-          body: this.wikitext,
-        },
-        {
-          where: {
-            id: this.article.id,
-          },
-        }
-      );
-      this.refreshArticles();
-    },
     loginToWiki(callback) {
-      this.Wiki.logIn('Yiddishe Kop', '82117907', callback);
+      this.$wiki.logIn('Yiddishe Kop', '82117907', callback);
+    },
+    saveChangesLocal() {
+      this.update({
+        title: this.article.title,
+        body: this.wikitext,
+      });
     },
     async syncWikiArticle() {
       await this.saveChangesLocal();
       this.loginToWiki((err, data) => {
         if (err) return;
-        this.Wiki.edit(
+        this.$wiki.edit(
           this.article.title,
           this.wikitext,
           '!!!נערך ע״י תוכנה שפותח ע״י היידישע קאפ!!!',
