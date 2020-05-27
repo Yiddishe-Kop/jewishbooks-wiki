@@ -1,14 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
+import openLoginWindow from '../helpers/login';
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
+    {
+      path: '/login',
+      name: 'login',
+      component: require('@/pages/Login').default,
+      meta: {
+        layout: 'minimal'
+      }
+    },
     {
       path: '/',
       name: 'landing-page',
-      component: require('@/components/LandingPage').default
+      component: require('@/pages/LandingPage').default
     },
     {
       path: '/wiki',
@@ -26,3 +36,15 @@ export default new Router({
     }
   ]
 })
+
+// Auth guard
+router.beforeEach((to, from, next) => {
+  // if not logged in
+  if (to.name !== 'login' && !store.state.App.auth.user) {
+    openLoginWindow()
+  } else {
+    next()
+  }
+})
+
+export default router;

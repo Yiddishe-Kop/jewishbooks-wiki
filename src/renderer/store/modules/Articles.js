@@ -1,5 +1,5 @@
 const Storage = require('electron-store');
-const electron = require('electron')
+const electron = require('electron').remote
 
 const schema = {
   articles: {
@@ -49,17 +49,15 @@ const actions = {
     commit('UPDATE_ARTICLE', article)
   },
   destroy({ commit }, title) {
-    electron.dialog.showMessageBox(undefined, {
+    electron.dialog.showMessageBox(electron.getCurrentWindow(), {
       type: 'warning',
       buttons: ['Cancel', 'Delete'],
       defaultId: 0,
-      noLink: true,
       title: `Delete article`,
       message: `Are you sure you want to delete ${title}?`,
       detail: 'This is irreversible.',
-    }).then(function (res) {
-      console.log(res);
-      if (res === 1) commit('DELETE_ARTICLE', title)
+    }).then(({ response }) => {
+      if (response === 1) commit('DELETE_ARTICLE', title)
     }).catch(e => console.log({ e }))
   }
 }

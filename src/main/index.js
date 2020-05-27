@@ -1,5 +1,5 @@
-import { app, BrowserWindow } from 'electron'
-import store from '../renderer/store'
+import { app, BrowserWindow, ipcMain } from 'electron'
+// import store from '../renderer/store'
 
 /**
  * Set `__static` path to static files in production
@@ -25,7 +25,7 @@ function createWindow() {
     backgroundColor: '#e2e8f0',
     titleBarStyle: 'hiddenInset',
     webPreferences: {
-      // devTools: true,
+      devTools: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true
     }
@@ -37,6 +37,16 @@ function createWindow() {
     mainWindow = null
   })
 }
+
+// broadcast Vuex mutations
+ipcMain.on('login', (event, user) => {
+  BrowserWindow.getAllWindows().forEach(window => {
+    window.webContents.send(
+      'login',
+      user
+    );
+  })
+});
 
 app.on('ready', createWindow)
 

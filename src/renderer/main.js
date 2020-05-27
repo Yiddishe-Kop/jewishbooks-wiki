@@ -1,4 +1,5 @@
 require('win-ca')
+import { ipcRenderer } from "electron";
 
 import Vue from 'vue'
 import axios from 'axios'
@@ -27,5 +28,10 @@ new Vue({
   components: { App },
   router,
   store,
-  template: '<App/>'
+  template: '<App/>',
+  mounted() {
+    ipcRenderer.on("login", (event, user) => {
+      this.$store.commit('App/LOGIN_USER', user);
+    });
+  }
 }).$mount('#app')

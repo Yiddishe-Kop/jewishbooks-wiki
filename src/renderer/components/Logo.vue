@@ -1,6 +1,6 @@
 <template>
   <router-link class="inline-block logo" to="/">
-    <svg width="30" viewBox="0 0 199.177 289.373">
+    <svg viewBox="0 0 199.177 289.373" :class="{ rotate }">
       <path
         class="lamp"
         d="M61.91,1.909a99.023,99.023,0,0,0-18.7,173.6c10.73,7.27,16.69,19.81,16.69,32.83v15.58H82.61c0-.14.07-.28.07-.49.07-.76,10.32-79.15-35.59-106.15a3.5,3.5,0,0,1-1.25-4.78,3.343,3.343,0,0,1,4.71-1.18,63.758,63.758,0,0,1,11.36,8.45l8.45-7.27a7.566,7.566,0,0,1,9.27-.07l8.25,8.65c0-.07.2-.13.34-.27l6.65-8.66a2.984,2.984,0,0,1,.41-.48V26.219C95.28,7.789,79.01-5.021,61.91,1.909Z"
@@ -21,19 +21,29 @@
         class="c"
         d="M53.82,256.448c0,4.788,4.224,8.682,9.418,8.682h72.71c5.193,0,9.417-3.894,9.417-8.682v-3.511H53.82Z"
       />
-      <path
-        class="c"
-        d="M66.647,272.478a16.9,16.9,0,0,0,16.894,16.895h30.5a16.9,16.9,0,0,0,16.895-16.895H66.647Z"
-      />
+      <path class="c" d="M66.647,272.478a16.9,16.9,0,0,0,16.894,16.895h30.5a16.9,16.9,0,0,0,16.895-16.895H66.647Z" />
     </svg>
   </router-link>
 </template>
 
+<script>
+export default {
+  props: {
+    rotate: {
+      type: Boolean,
+      default: true,
+    },
+  },
+};
+</script>
+
 <style lang="scss">
 .logo {
   svg {
-    transition: all 0.2s ease;
-    animation: rotate 4s ease-in-out 1s 5;
+    &.rotate {
+      transition: all 0.2s ease;
+      animation: rotate 4s ease-in-out 1s 5;
+    }
     .lamp {
       fill: currentColor;
       @apply text-brand;

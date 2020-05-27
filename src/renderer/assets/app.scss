@@ -2,6 +2,35 @@
 @tailwind base;
 @tailwind components;
 
+@font-face {
+  font-family: "siddur";
+  src: url("./fonts/SiddurOCGX.ttf") format("ttf"), url("./fonts/SiddurOCGX.woff2") format("woff2");
+}
+@font-face {
+  font-family: "SBLhebrew";
+  src: url("./fonts/SBL_Hbrw.ttf") format("ttf"), url("./fonts/SBL_Hbrw.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Heebo var";
+  font-weight: 100 900;
+  font-style: normal;
+  font-named-instance: "Regular";
+  font-display: swap;
+  src: url("./fonts/Heebo-beta-VF.ttf");
+}
+
+.siddur {
+  font-family: "siddur", "Heebo var", sans-serif;
+  font-variation-settings: "wght" 700;
+  font-weight: normal !important;
+  font-size: 32px;
+  margin-top: -0.4em; // fixes leading bug
+  &.font-light {
+    font-variation-settings: "wght" 100;
+    font-weight: 100;
+  }
+}
+
 // Page transition
 .page-enter-active {
   transition: all 0.3s ease-in;

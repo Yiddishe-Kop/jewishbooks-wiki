@@ -23,7 +23,8 @@ module.exports = {
         brand: '#ffad1f'
       },
       fontFamily: {
-        sans: ['Inter var', 'Heebo', ...defaultTheme.fontFamily.sans],
+        sbl: ['SBLhebrew', 'siddur', 'Heebo var', 'Inter var'],
+        sans: ['Inter var', 'Heebo var', ...defaultTheme.fontFamily.sans],
         mono: ['Cascadia', ...defaultTheme.fontFamily.mono], // font for code snippets 😎
       },
     }

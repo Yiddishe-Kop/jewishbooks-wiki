@@ -5,9 +5,9 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div class="flex items-center justify-between h-16 px-4 sm:px-0">
             <div class="flex items-center">
-              <logo class="flex-shrink-0 w-16" />
+              <logo class="flex-shrink-0 w-8 ml-10" />
               <div class="hidden md:block">
-                <div class="flex items-baseline ml-10 space-x-4">
+                <div class="flex items-baseline space-x-4">
                   <router-link
                     v-for="link in links"
                     :key="link.to"
@@ -36,37 +36,7 @@
 
                 <!-- Profile dropdown -->
                 <div class="relative mr-3">
-                  <div>
-                    <button
-                      class="flex items-center max-w-xs text-sm text-white rounded-full focus:focus:outline-none focus:shadow-solid"
-                      id="user-menu"
-                      aria-label="User menu"
-                      aria-haspopup="true"
-                    >
-                      <img
-                        class="w-8 h-8 rounded-full shadow-outline-gray"
-                        src="https://halpern.yiddishe-kop.com/img/users/NQ5WccXhHPSqLDUbsKWQN6VGMTgMA6dRAJvsRzB9.jpeg/656455b5e11f1cb983323323506df3e213b27167921c9ff70ab04a333d60adfb/NQ5WccXhHPSqLDUbsKWQN6VGMTgMA6dRAJvsRzB9.jpg?w=40&h=40&fit=crop"
-                        alt
-                      />
-                    </button>
-                  </div>
-                  <!--
-                    Profile dropdown panel, show/hide based on dropdown state.
-
-                    Entering: "transition ease-out duration-100"
-                      From: "transform opacity-0 scale-95"
-                      To: "transform opacity-100 scale-100"
-                    Leaving: "transition ease-in duration-75"
-                      From: "transform opacity-100 scale-100"
-                      To: "transform opacity-0 scale-95"
-                    -->
-                  <div class="absolute right-0 hidden w-48 mt-2 origin-top-right rounded-md shadow-lg">
-                    <div class="py-1 bg-white rounded-md shadow-xs">
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
-                    </div>
-                  </div>
+                  <user-avatar />
                 </div>
               </div>
             </div>
@@ -158,7 +128,9 @@
           </div>
         </div>
       </nav>
-      <header class="px-4 py-10 mx-auto text-2xl font-extrabold text-gray-200 max-w-7xl sm:px-6 lg:px-8">כותרת</header>
+      <header class="px-4 py-10 mx-auto text-4xl font-extrabold text-gray-200 siddur max-w-7xl sm:px-6 lg:px-8">
+        כותרת
+      </header>
     </div>
 
     <main class="flex-1 px-6 -mt-32 overflow-auto">
@@ -171,8 +143,9 @@
 
 <script>
 import Logo from '../components/Logo';
+import UserAvatar from '../components/ui/UserAvatar';
 export default {
-  components: { Logo },
+  components: { Logo, UserAvatar },
   data() {
     return {
       links: [
@@ -187,10 +160,12 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
-
 .titlebar {
   -webkit-user-select: none;
   -webkit-app-region: drag;
+}
+.no-drag {
+  -webkit-user-select: auto;
+  -webkit-app-region: no-drag;
 }
 </style>
