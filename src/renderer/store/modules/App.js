@@ -55,15 +55,6 @@ const actions = {
   }
 }
 
-storage.onDidChange('auth.user', newUser => {
-  if (newUser) {
-    console.log('firing login...');
-
-    const store = require('..')
-    store.dispatch('App/loginUser', newUser)
-  }
-})
-
 export default {
   namespaced: true,
   state,

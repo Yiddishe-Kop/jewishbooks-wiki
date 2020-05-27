@@ -1,9 +1,6 @@
 <template>
   <div class="flex items-center justify-center h-screen px-8 bg-gray-800 titlebar" dir="rtl">
-    <form
-      @submit.prevent="loginUser({ name, password })"
-      class="flex flex-col items-center p-6 text-gray-100 rounded-md"
-    >
+    <form @submit.prevent="attemptLogin" class="flex flex-col items-center p-6 text-gray-100 rounded-md">
       <div class="text-center">
         <logo class="inline-block w-12 h-auto mx-auto" :rotate="false" />
         <h1 class="mt-2 text-xl font-thin text-gray-400">אוצר הספרים השיתופי</h1>
@@ -35,10 +32,12 @@
             placeholder="סיסמה"
           />
         </div>
+        <p v-if="err" class="mt-1 text-xs text-red-500">{{ err }}</p>
       </div>
 
       <div class="mt-6 no-drag w-72">
         <button
+          v-if="!isLoading"
           type="submit"
           class="relative flex justify-center w-full px-4 py-2 text-sm font-bold leading-5 text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md group hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700"
         >
@@ -57,6 +56,7 @@
           </span>
           כניסה
         </button>
+        <loader v-else />
       </div>
     </form>
   </div>
@@ -64,19 +64,34 @@
 
 <script>
 import Logo from '../components/Logo';
+import Loader from '../components/ui/Loader';
 import { mapActions } from 'vuex';
 
 export default {
   name: 'Login',
-  components: { Logo },
+  components: { Logo, Loader },
   data() {
     return {
       name: '',
       password: '',
+      err: '',
+      isLoading: false,
     };
   },
   methods: {
     ...mapActions('App', ['loginUser']),
+    attemptLogin() {
+      this.isLoading = true;
+      this.err = '';
+      this.$wiki.logIn(this.name, this.password, (err, res) => {
+        this.isLoading = false;
+        if (err) {
+          this.err = err;
+          return;
+        }
+        this.loginUser({ name: this.name, password: this.password });
+      });
+    },
   },
   mounted() {
     this.$refs.usernameInput.focus();
