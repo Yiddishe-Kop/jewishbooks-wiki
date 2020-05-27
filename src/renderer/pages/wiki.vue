@@ -54,7 +54,6 @@ export default {
   name: 'wikipedia',
   data() {
     return {
-      query: 'מסכת שבת',
       article: {},
       wikitext: '',
       error: '',

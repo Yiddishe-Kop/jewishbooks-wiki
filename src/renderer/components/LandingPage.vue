@@ -62,7 +62,7 @@ export default {
   components: { ArticleCard },
   data() {
     return {
-      query: 'סוכה',
+      query: 'מסכת שבת',
       isLoading: false,
       searchResults: [],
       error: '',

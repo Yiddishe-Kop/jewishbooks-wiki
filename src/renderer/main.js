@@ -1,3 +1,5 @@
+require('win-ca')
+
 import Vue from 'vue'
 import axios from 'axios'
 
@@ -10,6 +12,7 @@ import Loader from './components/ui/Loader'
 import Icon from './components/ui/Icon'
 import VueWikitext from 'vue-wikitext'
 import './assets/app.scss'
+
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios

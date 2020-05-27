@@ -6,7 +6,9 @@
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build": "node .electron-vue/build.js && electron-builder -w",
+    "build": "node .electron-vue/build.js && electron-builder -wm",
+    "build:windows": "node .electron-vue/build.js && electron-builder -w",
+    "build:mac": "node .electron-vue/build.js && electron-builder -m",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -17,7 +19,7 @@
     "postinstall": "install-app-deps"
   },
   "build": {
-    "productName": "jewishbooks-wiki",
+    "productName": "Jewish Books Wiki",
     "appId": "com.yiddishe-kop.jewishbooks-wiki",
     "directories": {
       "output": "build"
@@ -26,6 +28,11 @@
       "dist/electron/**/*"
     ],
     "dmg": {
+      "background": "build/icons/background.png",
+      "window": {
+        "width": 845,
+        "height": 489
+      },
       "contents": [
         {
           "x": 410,
@@ -41,29 +48,32 @@
       ]
     },
     "mac": {
-      "icon": "app.icns"
+      "icon": "build/icons/app.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "asar": false,
+      "target": "nsis",
+      "icon": "build/icons/icon.png"
     },
     "linux": {
       "icon": "build/icons"
     }
   },
   "dependencies": {
-    "@tailwindcss/ui": "^0.3.0",
     "axios": "^0.18.0",
     "electron-store": "^5.1.1",
     "nodemw": "^0.13.0",
-    "tailwindcss": "^1.4.6",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
     "vue-wikitext": "0.0.3",
     "vuex": "^3.0.1",
-    "vuex-electron": "^1.0.0"
+    "vuex-electron": "^1.0.0",
+    "win-ca": "^3.2.0"
   },
   "devDependencies": {
+    "tailwindcss": "^1.4.6",
+    "@tailwindcss/ui": "^0.3.0",
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",

@@ -25,7 +25,7 @@ function createWindow() {
     backgroundColor: '#e2e8f0',
     titleBarStyle: 'hiddenInset',
     webPreferences: {
-      devTools: true,
+      // devTools: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true
     }
