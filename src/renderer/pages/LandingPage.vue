@@ -33,6 +33,13 @@
             class="relative p-4 transition bg-gray-200 rounded-lg hover:bg-blue-50"
           >
             <h2>{{ result.title }}</h2>
+            <div class="flex justify-between mt-1">
+              <span class="text-xs text-gray-600"
+                >נערך לאחרונה
+                <span class="text-gray-900">{{ new Date(result.timestamp).toLocaleDateString() }}</span></span
+              >
+              <span class="text-xs text-gray-600" dir="ltr">{{ filesize(result.size) }}</span>
+            </div>
             <button
               v-if="notYetSaved(result)"
               @click="saveArticleOffline(result)"
@@ -56,6 +63,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import ArticleCard from '../components/ArticleCard';
+import { filesize } from '../helpers/utils';
 
 export default {
   name: 'landing-page',
@@ -73,25 +81,36 @@ export default {
   },
   methods: {
     ...mapActions('Articles', ['refreshArticles', 'store', 'destroy']),
+    filesize,
     open(link) {
       this.$electron.shell.openExternal(link);
     },
     searchWiki() {
       this.error = '';
       this.isLoading = true;
-      this.$wiki.search(this.query, (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
+      this.$wiki.getAll(
+        {
+          action: 'query',
+          list: 'search',
+          srsearch: this.query,
+          srprop: 'timestamp|wordcount|size',
+          srlimit: 5000,
+        },
+        'search',
+        (err, data) => {
+          // this.$wiki.search(this.query, (err, data) => {
+          if (err) {
+            this.error = err;
+            this.searchResults = [];
+          } else if (!data.length) {
+            this.error = 'לא נמצאו תוצאות לחיפוש שלכם.';
+            this.searchResults = [];
+          } else {
+            this.searchResults = data;
+            this.isLoading = false;
+          }
         }
-        if (!data.length) {
-          this.error = 'לא נמצאו תוצאות לחיפוש שלכם.';
-          return;
-        }
-
-        this.searchResults = data;
-        this.isLoading = false;
-      });
+      );
     },
     notYetSaved(article) {
       return !this.articles.some(a => a.title == article.title);

@@ -99,6 +99,11 @@ export default {
       });
     },
   },
+  watch: {
+    $route(to, from) {
+      this.showArticle();
+    },
+  },
   async mounted() {
     this.showArticle();
   },

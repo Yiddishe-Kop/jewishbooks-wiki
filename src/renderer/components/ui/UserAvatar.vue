@@ -26,7 +26,7 @@
     </span>
     <dropdown v-if="!!user && open" :items="dropdownItems" @sign-out="logoutUser">
       <div class="px-4 py-2 bg-indigo-100 border-b border-indigo-300">
-        <p class="text-xs leading-4 text-indigo-400">Logged in as:</p>
+        <p class="text-xs leading-4 text-indigo-400">שלום עליכם,</p>
         <p class="text-sm font-medium leading-5 text-indigo-900">{{ user.name }}</p>
       </div>
     </dropdown>
@@ -46,13 +46,13 @@ export default {
       dropdownItems: [
         [
           {
-            label: 'Settings',
+            label: 'הגדרות',
             iconPath: `<path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>`,
           },
         ],
         [
           {
-            label: 'Log out',
+            label: 'יציאה',
             iconViewBox: '0 0 24 24',
             onClick: 'sign-out',
             iconPath: `<path d="M11 4h3a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V6h-2v12h2v-2a1 1 0 0 1 2 0v3a1 1 0 0 1-1 1h-3v1a1 1 0 0 1-1.27.96l-6.98-2A1 1 0 0 1 2 19V5a1 1 0 0 1 .75-.97l6.98-2A1 1 0 0 1 11 3v1z"></path><path class="secondary" d="M18.59 11l-1.3-1.3c-.94-.94.47-2.35 1.42-1.4l3 3a1 1 0 0 1 0 1.4l-3 3c-.95.95-2.36-.46-1.42-1.4l1.3-1.3H14a1 1 0 0 1 0-2h4.59z"></path>`,
