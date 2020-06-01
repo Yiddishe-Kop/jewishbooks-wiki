@@ -1,24 +1,10 @@
 import openLoginWindow from '../../helpers/login';
-const Storage = require('electron-store');
 import { ipcRenderer, remote } from "electron";
 
-const schema = {
-  auth: {
-    type: 'object',
-    default: {
-      user: null
-    }
-  },
-};
-
-const storage = new Storage({
-  schema,
-  name: 'app', // filename
-  // encryptionKey: 'iwerfliuelwieculqwup03902o2ndwefdn'
-});
-
 const state = {
-  auth: storage.get('auth'),
+  auth: {
+    user: null
+  },
   online: false
 }
 
@@ -29,7 +15,6 @@ const mutations = {
     }
   },
   LOGOUT(state) {
-    storage.set('auth.user', null)
     state.auth.user = null
   },
   GO_ONLINE(state) {
@@ -45,7 +30,6 @@ const actions = {
     openLoginWindow()
   },
   loginUser: ({ commit }, user) => {
-    storage.set('auth.user', user)
     commit('LOGIN_USER', user)
     ipcRenderer.send("login", user);
     remote.getCurrentWindow().close()

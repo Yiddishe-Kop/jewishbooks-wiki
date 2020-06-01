@@ -1,50 +1,28 @@
-const Storage = require('electron-store');
 const electron = require('electron').remote
 
-const schema = {
-  articles: {
-    type: 'array',
-    default: []
-  },
-  categories: {
-    type: 'array',
-    default: []
-  },
-};
-
-const storage = new Storage({
-  schema,
-  name: 'articles', // filename
-  // encryptionKey: 'iwerfliuelwieculqwup03902o2ndwefdn'
-});
-
 const state = {
-  articles: storage.get('articles'),
-  categories: storage.get('categories')
+  articles: [],
+  categories: []
 }
 
 const mutations = {
   SET_CATEGORIES(state, categories) {
     state.categories = categories
-    storage.set('categories', state.categories)
   },
   SET_ARTICLES(state, articles) {
     state.articles = articles
   },
   CREATE_ARTICLE(state, article) {
     state.articles.push(article)
-    storage.set('articles', state.articles)
   },
   UPDATE_ARTICLE(state, article) {
     state.articles = [
       ...state.articles.filter(a => a.title != article.title),
       article
     ]
-    storage.set('articles', state.articles)
   },
   DELETE_ARTICLE(state, title) {
     state.articles = state.articles.filter(a => a.title != title)
-    storage.set('articles', state.articles)
   }
 }
 
