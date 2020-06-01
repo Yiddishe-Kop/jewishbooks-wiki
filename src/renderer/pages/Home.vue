@@ -26,11 +26,17 @@
     </div>
 
     <button @click="downloadAllCategories" class="px-3 py-1 text-blue-500 bg-blue-100 rounded">הורד כל הקטוריות</button>
+
+    <ul class="mt-4">
+      <li v-for="cat in catTree" :key="cat.pageid">
+        {{ cat.title.replace('קטגוריה:', '') }}
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-import { getAllTalkPages } from '../helpers/wiki';
+import { getAllTalkPages, getSubcategories } from '../helpers/wiki';
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -38,6 +44,7 @@ export default {
   data() {
     return {
       pages: [],
+      catTree: [],
       progress: {
         total: undefined,
         done: undefined,
@@ -50,6 +57,7 @@ export default {
   },
   methods: {
     ...mapActions('Articles', ['setCategories', 'store']),
+
     getAllPages() {
       this.$wiki.getAllPages((err, pages) => {
         if (err) {
@@ -58,6 +66,26 @@ export default {
         }
         this.pages = pages;
       });
+    },
+    async buildCategoryTree() {
+      const rootCats = await getSubcategories('קטגוריה:עץ קטגוריות ראשי');
+
+      const getChildren = async cats => {
+        if (cats.some(cat => cat.type == 'subcat' && !cat.subcats)) {
+          console.log('diving deeper...', cats);
+          cats.forEach(async cat => {
+            if (cat.type == 'subcat') {
+              let subcats = await getSubcategories(cat.title);
+              cat.subcats = await getChildren(subcats);
+            }
+          });
+        } else {
+          console.log('coming out...', cats);
+          return cats;
+        }
+      };
+
+      this.catTree = await getChildren(rootCats);
     },
     getCategories() {
       this.$wiki.getCategories((err, cats) => {
@@ -117,7 +145,7 @@ export default {
     if (!this.categories.length) {
       this.getCategories();
     }
-    // this.getAllPages();
+    this.buildCategoryTree();
   },
 };
 </script>
