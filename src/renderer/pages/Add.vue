@@ -4,7 +4,7 @@
     <ul v-if="articles.length">
       <transition-group name="list" class="grid grid-cols-2 gap-4 mt-6 md:grid-cols-3 lg:grid-cols-4" appear>
         <article-card
-          v-for="article in articles"
+          v-for="article in sortedArticles"
           :key="article.title"
           :article="article"
           @delete="destroy(article.title)"
@@ -78,6 +78,17 @@ export default {
   },
   computed: {
     ...mapState('Articles', ['articles']),
+    sortedArticles() {
+      return this.articles.sort((a, b) => {
+        if (a.category < b.category) {
+          return -1;
+        }
+        if (a.category > b.category) {
+          return 1;
+        }
+        return 0;
+      });
+    },
   },
   methods: {
     ...mapActions('Articles', ['refreshArticles', 'store', 'destroy']),
@@ -123,7 +134,7 @@ export default {
         }
         this.store({
           title: article.title,
-          body: data,
+          content: data,
         });
       });
     },

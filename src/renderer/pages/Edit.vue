@@ -75,7 +75,7 @@ export default {
         const article = this.articles.find(a => a.title == articleTitle);
 
         this.article = article;
-        this.wikitext = article.body;
+        this.wikitext = article.content;
       }
     },
     loginToWiki(callback) {
@@ -84,7 +84,7 @@ export default {
     saveChangesLocal() {
       this.update({
         title: this.article.title,
-        body: this.wikitext,
+        content: this.wikitext,
       });
     },
     async syncWikiArticle() {
