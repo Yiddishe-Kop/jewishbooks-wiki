@@ -15,6 +15,7 @@
           <span>שמור שינויים</span>
         </button>
         <button
+          v-if="online"
           @click="syncWikiArticle"
           class="flex items-center p-2 text-blue-500 transition bg-blue-100 rounded-md hover:bg-blue-200"
         >
@@ -26,19 +27,22 @@
 
     <section class="mt-12 wiki">
       <div v-if="!!wikitext" class="grid grid-cols-2 gap-8">
-        <div class="relative p-1 border border-green-700 rounded">
+        <div class="relative">
           <span
-            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-green-100 transform -translate-y-1/2 bg-green-700 rounded-full"
+            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-green-600 transform -translate-y-1/2 bg-green-100 border-2 border-green-700 rounded-full"
             >עריכה</span
           >
-          <textarea v-model="wikitext" class="w-full h-full p-4"></textarea>
+          <textarea
+            v-model="wikitext"
+            class="w-full h-full p-4 pt-6 bg-transparent form-input focus:outline-none"
+          ></textarea>
         </div>
-        <div class="relative border border-blue-700 rounded">
+        <div class="relative p-1 bg-gray-100 rounded shadow-md">
           <span
-            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-blue-100 transform -translate-y-1/2 bg-blue-700 rounded-full"
+            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-blue-600 transform -translate-y-1/2 bg-blue-100 border-2 border-blue-700 rounded-full"
             >תצוגה מקדימה</span
           >
-          <vue-wikitext :source="wikitext" class="p-4" />
+          <vue-wikitext :source="wikitext" class="p-4 pt-6" />
         </div>
       </div>
       <div v-else-if="!!error" v-html="error" class="my-16 text-sm text-center text-red-500"></div>
@@ -61,6 +65,7 @@ export default {
   },
   computed: {
     ...mapState('Articles', ['articles']),
+    ...mapState('App', ['online']),
   },
   methods: {
     ...mapActions('Articles', ['update']),

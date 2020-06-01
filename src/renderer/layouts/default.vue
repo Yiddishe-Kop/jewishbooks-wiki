@@ -29,28 +29,28 @@
       </ul>
     </section>
     <div class="flex flex-col flex-1 overflow-hidden bg-white">
+      <!-- TOP BAR -->
       <nav class="bg-gray-800 border-b border-gray-700 draggable">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div class="flex items-center justify-end h-16 px-4 sm:px-0">
-            <div class="hidden md:block">
-              <div class="flex items-center ml-4 md:ml-6">
-                <button
-                  class="p-1 text-gray-400 border-2 border-transparent rounded-full hover:text-white focus:focus:outline-none focus:text-white focus:bg-gray-700"
-                  aria-label="Notifications"
-                >
-                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                      clip-rule="evenodd"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </button>
+            <div class="w-3 h-3 ml-4 rounded-full" :class="online ? 'bg-green-400' : 'bg-orange-400'"></div>
+            <div class="flex items-center ml-4 md:ml-6">
+              <button
+                class="p-1 text-gray-400 border-2 border-transparent rounded-full focus:outline-none hover:text-white focus:focus:outline-none focus:text-white focus:bg-gray-700"
+                aria-label="Notifications"
+              >
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
 
-                <!-- Profile dropdown -->
-                <div class="relative mr-3">
-                  <user-avatar />
-                </div>
+              <!-- Profile dropdown -->
+              <div class="relative mr-3">
+                <user-avatar />
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@
 <script>
 import Logo from '../components/Logo';
 import UserAvatar from '../components/ui/UserAvatar';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 export default {
   components: { Logo, UserAvatar },
   data() {
@@ -90,6 +90,18 @@ export default {
   },
   computed: {
     ...mapState('Articles', ['articles']),
+    ...mapState('App', ['online']),
+  },
+  methods: {
+    ...mapActions('App', ['goOnline', 'goOffline']),
+    monitorOnlineStatus() {
+      navigator.onLine ? this.goOnline() : this.goOffline();
+    },
+  },
+  mounted() {
+    window.addEventListener('online', this.monitorOnlineStatus);
+    window.addEventListener('offline', this.monitorOnlineStatus);
+    this.monitorOnlineStatus();
   },
 };
 </script>

@@ -17,7 +17,8 @@ const storage = new Storage({
 });
 
 const state = {
-  auth: storage.get('auth')
+  auth: storage.get('auth'),
+  online: false
 }
 
 const mutations = {
@@ -29,7 +30,13 @@ const mutations = {
   LOGOUT(state) {
     storage.set('auth.user', null)
     state.auth.user = null
-  }
+  },
+  GO_ONLINE(state) {
+    state.online = true
+  },
+  GO_OFFLINE(state) {
+    state.online = false
+  },
 }
 
 const actions = {
@@ -52,7 +59,13 @@ const actions = {
     }).then(({ response }) => {
       if (response === 1) commit('LOGOUT')
     }).catch(e => console.log({ e }))
-  }
+  },
+  goOnline({ commit }) {
+    commit('GO_ONLINE')
+  },
+  goOffline({ commit }) {
+    commit('GO_OFFLINE')
+  },
 }
 
 export default {
