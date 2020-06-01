@@ -94,7 +94,7 @@ export default {
           list: 'search',
           srsearch: this.query,
           srprop: 'timestamp|wordcount|size',
-          srlimit: 5000,
+          srlimit: 50,
         },
         'search',
         (err, data) => {

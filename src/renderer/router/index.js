@@ -17,18 +17,23 @@ const router = new Router({
     },
     {
       path: '/',
-      name: 'landing-page',
-      component: require('@/pages/LandingPage').default
+      name: 'home',
+      component: require('@/pages/Home').default
+    },
+    {
+      path: '/add',
+      name: 'add',
+      component: require('@/pages/Add').default
     },
     {
       path: '/wiki',
       name: 'wiki',
-      component: require('@/pages/wiki').default
+      component: require('@/pages/Edit').default
     },
     {
       path: '/articles/:title',
       name: 'show-article',
-      component: require('@/pages/wiki').default
+      component: require('@/pages/Edit').default
     },
     {
       path: '*',

@@ -13,7 +13,8 @@ const schema = {
 
 const storage = new Storage({
   schema,
-  name: 'app' // filename
+  name: 'app', // filename
+  // encryptionKey: 'iwerfliuelwieculqwup03902o2ndwefdn'
 });
 
 const state = {

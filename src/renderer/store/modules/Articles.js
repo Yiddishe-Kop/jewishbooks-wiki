@@ -6,18 +6,28 @@ const schema = {
     type: 'array',
     default: []
   },
+  categories: {
+    type: 'array',
+    default: []
+  },
 };
 
 const storage = new Storage({
   schema,
-  name: 'articles' // filename
+  name: 'articles', // filename
+  // encryptionKey: 'iwerfliuelwieculqwup03902o2ndwefdn'
 });
 
 const state = {
-  articles: storage.get('articles')
+  articles: storage.get('articles'),
+  categories: storage.get('categories')
 }
 
 const mutations = {
+  SET_CATEGORIES(state, categories) {
+    state.categories = categories
+    storage.set('categories', state.categories)
+  },
   SET_ARTICLES(state, articles) {
     state.articles = articles
   },
@@ -39,6 +49,9 @@ const mutations = {
 }
 
 const actions = {
+  setCategories: ({ commit }, categories) => {
+    commit('SET_CATEGORIES', categories)
+  },
   setArticles: ({ commit }, articles) => {
     commit('SET_ARTICLES', articles)
   },

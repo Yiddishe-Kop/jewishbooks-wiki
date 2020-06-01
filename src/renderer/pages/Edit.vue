@@ -70,7 +70,7 @@ export default {
   methods: {
     ...mapActions('Articles', ['update']),
     showArticle() {
-      const articleTitle = this.$route.params.title.replace(/\-/g, '/');
+      const articleTitle = decodeURIComponent(this.$route.params.title);
       if (articleTitle) {
         const article = this.articles.find(a => a.title == articleTitle);
 

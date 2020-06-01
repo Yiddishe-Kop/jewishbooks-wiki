@@ -5,7 +5,7 @@
       <nav class="my-8 space-y-6">
         <router-link
           v-for="link in links"
-          :key="link.to"
+          :key="link.to.name"
           :to="link.to"
           exact-active-class="text-teal-400 bg-teal-900 no-drag shadow-outline-teal hover:bg-teal-800"
           class="block p-1.5 bg-gray-800 text-gray-200 shadow-outline-gray rounded-full hover:bg-gray-700 transition"
@@ -15,18 +15,22 @@
       </nav>
     </div>
     <section class="h-full p-1 overflow-y-auto bg-gray-400" style="width: 220px">
-      <h1 class="mt-4 text-xl font-semibold">העמודים שלי</h1>
-      <ul class="mt-3 space-y-1">
-        <li v-for="article in articles" :key="article.title">
-          <router-link
+      <h1 class="mt-4 text-xl font-semibold">קטגוריות</h1>
+      <ul v-if="categories.length" class="mt-3 space-y-1">
+        <li class="block p-2 transition bg-gray-100 rounded hover:bg-teal-50" v-for="cat in categories" :key="cat">
+          {{ cat }}
+          <!-- <router-link
             exact-active-class="text-teal-800 bg-teal-100 hover:bg-teal-200"
-            :to="`/articles/${article.title.replace(/\//g, '-')}`"
+            :to="`/articles/${encodeURIComponent(article.title)}`"
             class="block p-2 transition bg-gray-100 rounded hover:bg-teal-50"
           >
             {{ article.title }}
-          </router-link>
+          </router-link> -->
         </li>
       </ul>
+      <div v-else class="py-10 mt-4 text-center">
+        <p class="text-sm text-gray-600">אין לך עמודים שמורים</p>
+      </div>
     </section>
     <div class="flex flex-col flex-1 overflow-hidden bg-white">
       <!-- TOP BAR -->
@@ -76,20 +80,20 @@ export default {
     return {
       links: [
         {
-          to: '/',
+          to: { name: 'home' },
           label: 'בית',
           icon: 'home',
         },
         {
-          to: '/wiki',
-          label: 'עריכה',
+          to: { name: 'add' },
+          label: 'הוספה',
           icon: 'add-circle',
         },
       ],
     };
   },
   computed: {
-    ...mapState('Articles', ['articles']),
+    ...mapState('Articles', ['categories']),
     ...mapState('App', ['online']),
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-center h-screen px-8 bg-gray-800 titlebar" dir="rtl">
-    <form @submit.prevent="attemptLogin" class="flex flex-col items-center p-6 text-gray-100 rounded-md">
+    <div class="flex flex-col items-center p-6 text-gray-100 rounded-md">
       <div class="text-center">
         <logo class="inline-block w-12 h-auto mx-auto" :rotate="false" />
         <h1 class="mt-2 text-xl font-thin text-gray-400">אוצר הספרים השיתופי</h1>
@@ -35,30 +35,34 @@
         <p v-if="err" class="mt-1 text-xs text-red-500">{{ err }}</p>
       </div>
 
-      <div class="mt-6 no-drag w-72">
+      <div v-if="!isLoading" class="mt-6 no-drag w-72">
         <button
-          v-if="!isLoading"
-          type="submit"
+          @click="attemptLogin"
           class="relative flex justify-center w-full px-4 py-2 text-sm font-bold leading-5 text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md group hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700"
         >
           <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg
+            <icon
+              name="lock"
               class="w-5 h-5 text-blue-500 transition duration-150 ease-in-out group-hover:text-blue-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
+            />
           </span>
           כניסה
         </button>
-        <loader v-else />
+        <button
+          @click="createAccount"
+          class="relative flex justify-center w-full px-4 py-2 mt-3 text-sm font-bold leading-5 text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md group hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700"
+        >
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <icon
+              name="lock"
+              class="w-5 h-5 text-blue-500 transition duration-150 ease-in-out group-hover:text-blue-400"
+            />
+          </span>
+          יצירת חשבון
+        </button>
       </div>
-    </form>
+      <loader v-else />
+    </div>
   </div>
 </template>
 
@@ -84,6 +88,18 @@ export default {
       this.isLoading = true;
       this.err = '';
       this.$wiki.logIn(this.name, this.password, (err, res) => {
+        this.isLoading = false;
+        if (err) {
+          this.err = err;
+          return;
+        }
+        this.loginUser({ name: this.name, password: this.password });
+      });
+    },
+    createAccount() {
+      this.isLoading = true;
+      this.err = '';
+      this.$wiki.createAccount(this.name, this.password, (err, res) => {
         this.isLoading = false;
         if (err) {
           this.err = err;
