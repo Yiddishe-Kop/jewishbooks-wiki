@@ -4,7 +4,7 @@
 
     <div class="flex items-center justify-between space-x-2">
       <div>
-        <h1 class="text-3xl font-black text-gray-800">{{ article.title }}</h1>
+        <h1 class="text-3xl font-black text-gray-800">{{ decodeURIComponent($route.params.title) }}</h1>
       </div>
       <div class="flex">
         <button
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div v-else-if="!!error" v-html="error" class="my-16 text-sm text-center text-red-500"></div>
-      <div v-else class="my-16 text-center text-gray-400">התוצאות יוצגו כאן</div>
+      <div v-else class="text-center text-gray-400 my-36">דף זה לא שמור במחשב שלך</div>
     </section>
   </div>
 </template>
@@ -55,7 +55,7 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'wikipedia',
+  name: 'Edit',
   data() {
     return {
       article: {},
@@ -68,12 +68,11 @@ export default {
     ...mapState('App', ['online']),
   },
   methods: {
-    ...mapActions('Articles', ['update']),
-    showArticle() {
-      const articleTitle = decodeURIComponent(this.$route.params.title);
-      if (articleTitle) {
-        const article = this.articles.find(a => a.title == articleTitle);
+    ...mapActions('Articles', ['getArticle', 'update']),
+    async showArticle() {
+      const article = await this.getArticle(this.$route.params.id);
 
+      if (article) {
         this.article = article;
         this.wikitext = article.content;
       }

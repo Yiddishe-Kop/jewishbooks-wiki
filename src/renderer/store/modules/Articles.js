@@ -33,7 +33,11 @@ const actions = {
   setArticles: ({ commit }, articles) => {
     commit('SET_ARTICLES', articles)
   },
-  store({ commit }, article) {
+  getArticle: ({ state }, id) => {
+    return state.articles.find(a => a.id == id)
+  },
+  async store({ dispatch, commit }, article) {
+    if (await dispatch('getArticle', article.id)) return // it's already saved
     commit('CREATE_ARTICLE', article)
   },
   update({ commit }, article) {

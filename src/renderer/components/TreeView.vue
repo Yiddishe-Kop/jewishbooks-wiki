@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full h-full p-4 overflow-auto leading-relaxed text-justify">
+  <div class="flex w-full h-full overflow-auto leading-relaxed text-justify">
     <section
       v-for="(col, i) in columns"
       :key="i"
@@ -7,7 +7,13 @@
       :style="`z-index: ${100 - i}`"
       style="min-width: 260px"
     >
-      <list :icon="i === 0" @select="selectItem($event, i)" :list="col" :size="i === 0 ? 'large' : 'medium'" />
+      <list
+        :checkbox="i === 0"
+        :list="col"
+        :size="i === 0 ? 'large' : 'medium'"
+        @select="selectItem($event, i)"
+        @check="checkCategory"
+      />
     </section>
   </div>
 </template>
@@ -22,6 +28,7 @@ export default {
   data() {
     return {
       columns: [catTree],
+      categories: catTree,
     };
   },
   methods: {
@@ -30,6 +37,9 @@ export default {
       this.columns.length > i && this.columns.splice(i + 1);
       // insert new column
       item.type == 'subcat' && this.columns.push(item.subcats);
+    },
+    checkCategory(e) {
+      this.categories[e.i].selected = e.value;
     },
   },
 };

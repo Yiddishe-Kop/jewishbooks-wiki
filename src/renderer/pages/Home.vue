@@ -1,46 +1,31 @@
 <template>
-  <div class="py-12">
-    <h1>קטגוריות</h1>
-
-    <!-- <ul v-if="pages.length" class="mt-6 divide-y divide-gray-400 rounded bg-gray-80">
-      <li v-for="page in pages" :key="page.pageid" class="px-2 py-1 text-sm transition hover:bg-gray-100">
-        {{ page }}
-      </li>
-    </ul>
-
-    <ul v-else-if="categories.length" class="mt-6 divide-y divide-gray-400 rounded bg-gray-80">
-      <li
-        v-for="cat in categories"
-        :key="cat"
-        @click="getPagesInCategory(cat)"
-        class="px-2 py-1 text-sm transition hover:bg-gray-100"
-      >
-        {{ cat }}
-      </li>
-    </ul>
-
-    <loader v-else /> -->
-    <div v-if="progress.current" class="my-3">
-      <span>
-        <span class="text-gray-400">מוריד כרגע:</span>
-        <strong>{{ progress.current }}</strong>
-      </span>
-      <!-- <span class="mr-6">{{ progress.done }}/{{ progress.total }}</span> -->
+  <div>
+    <div class="md:flex md:items-center md:justify-between">
+      <div class="flex-1 min-w-0">
+        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
+          הורד קטגוריות
+        </h2>
+        <p class="text-gray-600">סמן קטגוריות שברצונך להוריד למחשב שלך</p>
+      </div>
+      <div class="flex mt-4 md:mt-0 md:ml-4">
+        <span class="mr-3 rounded-md shadow-sm">
+          <button
+            @click="downloadCategoryPages"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700"
+          >
+            <icon name="download" class="w-5 ml-2" />
+            הורד
+          </button>
+        </span>
+      </div>
     </div>
 
-    <button @click="buildCategoryTree" class="px-3 py-1 text-blue-500 bg-blue-100 rounded">הורד כל הקטוריות</button>
-    <!--
-    <ul class="mt-4">
-      <li v-for="cat in catTree" :key="cat.pageid">
-        {{ cat.title.replace('קטגוריה:', '') }}
-      </li>
-    </ul> -->
-    <tree-view />
+    <tree-view class="mt-6" ref="treeView" />
   </div>
 </template>
 
 <script>
-import { getAllTalkPages, getSubcategories } from '../helpers/wiki';
+import { getAllTalkPages, getSubcategories, getPagesInCategory, getArticle } from '../helpers/wiki';
 import { mapState, mapActions } from 'vuex';
 import TreeView from '../components/TreeView';
 
@@ -121,28 +106,55 @@ export default {
         this.pages = pages;
       });
     },
-    getPagesInCategory(cat) {
-      this.$wiki.getPagesInCategory(cat, (err, pages) => {
-        console.log('Pages in category: %d', pages.length);
-        console.log({ pages });
+    async getPagesInCategory(cat) {
+      const pages = await getPagesInCategory(cat);
+      console.log('Pages in category: %d', pages.length);
+      console.log({ pages });
 
-        let fetchedPages = [];
-        pages.forEach(page => {
-          this.$wiki.getArticle(page.title, (err, content) => {
-            if (err) {
-              console.error(err);
-              return;
-            }
-
-            console.log({ content });
-            this.store({
-              category: cat,
-              title: page.title,
-              content: content.replace(/\n/g, ' '),
-            });
-          });
+      let fetchedPages = [];
+      pages.forEach(async page => {
+        const content = await getArticle(page.title);
+        console.log({ content });
+        this.store({
+          category: cat,
+          title: page.title,
+          content: content,
         });
       });
+    },
+    async downloadCategoryPages() {
+      let pageIds = this.$refs.treeView.categories
+        .filter(cat => cat.selected)
+        .reduce(flat, [])
+        .filter(c => c.type == 'page')
+        .map(c => c.pageid);
+
+      pageIds = [...new Set(pageIds)]; // remove duplicates
+
+      console.log(`Downloading ${pageIds.length} pages...`);
+
+      pageIds.forEach(async (pageId, i) => {
+        const pageContent = await getArticle(pageId);
+        console.log(`Downloaded page ${i + 1}...`);
+        this.store({
+          id: pageId,
+          content: pageContent,
+        });
+      });
+
+      function flat(r, a) {
+        var b = {};
+        Object.keys(a).forEach(k => {
+          if (k !== 'subcats') {
+            b[k] = a[k];
+          }
+        });
+        r.push(b);
+        if (Array.isArray(a.subcats)) {
+          return a.subcats.reduce(flat, r);
+        }
+        return r;
+      }
     },
     downloadAllCategories() {
       let cats = this.categories.slice(1, 5);
@@ -157,11 +169,7 @@ export default {
       });
     },
   },
-  async mounted() {
-    if (!this.categories.length) {
-      this.getCategories();
-    }
-  },
+  async mounted() {},
 };
 </script>
 

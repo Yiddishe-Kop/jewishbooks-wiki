@@ -18,7 +18,7 @@
       <h1 class="mt-4 text-xl font-semibold">קטגוריות</h1>
       <ul v-if="categories.length" class="mt-3 space-y-1">
         <li class="block p-2 transition bg-gray-100 rounded hover:bg-teal-50" v-for="cat in categories" :key="cat">
-          {{ cat }}
+          {{ cat.replace('קטגוריה:', '') }}
           <!-- <router-link
             exact-active-class="text-teal-800 bg-teal-100 hover:bg-teal-200"
             :to="`/articles/${encodeURIComponent(article.title)}`"
@@ -74,10 +74,13 @@
 import Logo from '../components/Logo';
 import UserAvatar from '../components/ui/UserAvatar';
 import { mapState, mapActions } from 'vuex';
+import catTree from '../assets/categoryTree.json';
+
 export default {
   components: { Logo, UserAvatar },
   data() {
     return {
+      categories: catTree.map(cat => cat.title),
       links: [
         {
           to: { name: 'home' },
@@ -93,7 +96,6 @@ export default {
     };
   },
   computed: {
-    ...mapState('Articles', ['categories']),
     ...mapState('App', ['online']),
   },
   methods: {

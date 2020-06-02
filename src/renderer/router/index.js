@@ -31,7 +31,7 @@ const router = new Router({
       component: require('@/pages/Edit').default
     },
     {
-      path: '/articles/:title',
+      path: '/articles/:title/:id',
       name: 'show-article',
       component: require('@/pages/Edit').default
     },
