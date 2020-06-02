@@ -3,15 +3,20 @@
     <div class="md:flex md:items-center md:justify-between">
       <div class="flex-1 min-w-0">
         <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
-          הורד קטגוריות
+          עץ קטגוריות ראשי
         </h2>
-        <p class="text-gray-600">סמן קטגוריות שברצונך להוריד למחשב שלך</p>
+        <p class="text-gray-600">{{ online ? 'סמן קטגוריות שברצונך להוריד למחשב שלך' : 'תפריט של כל הקטגוריות' }}</p>
       </div>
       <div class="flex mt-4 md:mt-0 md:ml-4">
         <span class="mr-3 rounded-md shadow-sm">
           <button
             @click="downloadCategoryPages"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700"
+            :class="[
+              online && hasSelectedCategories
+                ? 'bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700'
+                : 'bg-indigo-100',
+            ]"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out border border-transparent rounded-md"
           >
             <icon name="download" class="w-5 ml-2" />
             הורד
@@ -20,21 +25,22 @@
       </div>
     </div>
 
-    <tree-view class="mt-6" ref="treeView" />
+    <tree-view :categories="categories" @check="checkCategory" class="mt-6" ref="treeView" />
   </div>
 </template>
 
 <script>
-import { getAllTalkPages, getSubcategories, getPagesInCategory, getArticle } from '../helpers/wiki';
+import { getAllTalkPages, getSubcategories, getArticle } from '../helpers/wiki';
 import { mapState, mapActions } from 'vuex';
 import TreeView from '../components/TreeView';
+import catTree from '../assets/categoryTree.json';
 
 export default {
   name: 'Home',
   components: { TreeView },
   data() {
     return {
-      pages: [],
+      categories: catTree,
       progress: {
         total: undefined,
         done: undefined,
@@ -43,20 +49,15 @@ export default {
     };
   },
   computed: {
-    ...mapState('Articles', ['articles', 'categories']),
+    ...mapState('Articles', ['articles']),
+    ...mapState('App', ['online']),
+    hasSelectedCategories() {
+      return this.categories.filter(cat => cat.selected).length;
+    },
   },
   methods: {
-    ...mapActions('Articles', ['setCategories', 'store']),
+    ...mapActions('Articles', ['store']),
 
-    getAllPages() {
-      this.$wiki.getAllPages((err, pages) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        this.pages = pages;
-      });
-    },
     async buildCategoryTree() {
       const rootCats = await getSubcategories('קטגוריה:עץ קטגוריות ראשי');
 
@@ -88,40 +89,7 @@ export default {
       this.progress.current = undefined;
       // console.log(this.catTree);
     },
-    getCategories() {
-      this.$wiki.getCategories((err, cats) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        this.setCategories(cats);
-      });
-    },
-    getAllTalkPages() {
-      getAllTalkPages((err, pages) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        this.pages = pages;
-      });
-    },
-    async getPagesInCategory(cat) {
-      const pages = await getPagesInCategory(cat);
-      console.log('Pages in category: %d', pages.length);
-      console.log({ pages });
 
-      let fetchedPages = [];
-      pages.forEach(async page => {
-        const content = await getArticle(page.title);
-        console.log({ content });
-        this.store({
-          category: cat,
-          title: page.title,
-          content: content,
-        });
-      });
-    },
     async downloadCategoryPages() {
       let pageIds = this.$refs.treeView.categories
         .filter(cat => cat.selected)
@@ -156,17 +124,10 @@ export default {
         return r;
       }
     },
-    downloadAllCategories() {
-      let cats = this.categories.slice(1, 5);
-      this.progress.total = cats.length;
-      this.progress.done = 0;
-
-      // TODO: convert callback hell to async/await [likely need to fork the `nodemw` repo for that]
-      cats.forEach((cat, i) => {
-        this.progress.current = cat;
-        this.getPagesInCategory(cat);
-        this.progress.done = i + 1;
-      });
+    checkCategory(e) {
+      console.log({ e });
+      this.$set(this.categories[e.i], 'selected', e.value);
+      // this.categories[e.i].selected = e.value;
     },
   },
   async mounted() {},

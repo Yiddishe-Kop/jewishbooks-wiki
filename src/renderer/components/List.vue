@@ -50,21 +50,15 @@
               :to="`/articles/${encodeURIComponent(item.title)}/${item.pageid}`"
               class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
             >
-              <svg class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
-              </svg>
+              <icon name="eye" class="w-5 h-5 text-gray-500" />
             </router-link>
+            <button
+              v-else
+              @click="downloadArticle(item.pageid)"
+              class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
+            >
+              <icon name="download" class="w-5 h-5 text-gray-500" />
+            </button>
           </span>
         </div>
       </div>
@@ -73,7 +67,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
+import { getArticle } from '../helpers/wiki';
 
 export default {
   name: 'List',
@@ -87,8 +82,17 @@ export default {
     ...mapState('Articles', ['articles']),
   },
   methods: {
+    ...mapActions('Articles', ['store']),
     isSaved(id) {
       return !!this.articles.find(a => a.id == id);
+    },
+    async downloadArticle(id) {
+      const pageContent = await getArticle(id);
+      console.log(`Downloaded page ${id}...`);
+      this.store({
+        id,
+        content: pageContent,
+      });
     },
     select(item, i) {
       this.selected = i;

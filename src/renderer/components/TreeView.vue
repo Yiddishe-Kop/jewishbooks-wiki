@@ -12,23 +12,22 @@
         :list="col"
         :size="i === 0 ? 'large' : 'medium'"
         @select="selectItem($event, i)"
-        @check="checkCategory"
+        @check="$emit('check', $event)"
       />
     </section>
   </div>
 </template>
 
 <script>
-import catTree from '../assets/categoryTree.json';
 import List from './List';
 
 export default {
   name: 'IndexView',
   components: { List },
+  props: ['categories'],
   data() {
     return {
-      columns: [catTree],
-      categories: catTree,
+      columns: [this.categories],
     };
   },
   methods: {
@@ -36,10 +35,7 @@ export default {
       // remove all columns after
       this.columns.length > i && this.columns.splice(i + 1);
       // insert new column
-      item.type == 'subcat' && this.columns.push(item.subcats);
-    },
-    checkCategory(e) {
-      this.categories[e.i].selected = e.value;
+      item.subcats && item.subcats.length && this.columns.push(item.subcats);
     },
   },
 };

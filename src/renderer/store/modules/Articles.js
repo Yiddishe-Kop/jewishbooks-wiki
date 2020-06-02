@@ -2,13 +2,9 @@ const electron = require('electron').remote
 
 const state = {
   articles: [],
-  categories: []
 }
 
 const mutations = {
-  SET_CATEGORIES(state, categories) {
-    state.categories = categories
-  },
   SET_ARTICLES(state, articles) {
     state.articles = articles
   },
@@ -27,9 +23,6 @@ const mutations = {
 }
 
 const actions = {
-  setCategories: ({ commit }, categories) => {
-    commit('SET_CATEGORIES', categories)
-  },
   setArticles: ({ commit }, articles) => {
     commit('SET_ARTICLES', articles)
   },
