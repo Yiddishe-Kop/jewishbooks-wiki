@@ -11,13 +11,15 @@ const Bot = new bot({
 
 export const getAllTalkPages = (callback) => {
   Bot.log('Getting all talk pages...');
-  Bot.getAll({
-    action: 'query',
-    list: 'allpages',
-    apfilterredir: 'nonredirects', // do not include redirects
-    apnamespace: 1,
-    aplimit: 5000
-  },
+  Bot.getAll(
+
+    {
+      action: 'query',
+      list: 'allpages',
+      apfilterredir: 'nonredirects', // do not include redirects
+      apnamespace: 1,
+      aplimit: 5000
+    },
     'allpages',
     callback
   );

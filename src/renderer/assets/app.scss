@@ -90,6 +90,33 @@
     @apply my-8 rounded-md;
   }
 }
+
+// scrollbar
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  @apply bg-gray-400 rounded-full;
+}
+::-webkit-scrollbar-thumb {
+  width: 10px;
+  @apply bg-gray-600 rounded-full;
+
+  &:hover {
+    @apply bg-gray-800;
+  }
+}
+
+::-webkit-scrollbar-resizer {
+  display: none;
+}
+::-webkit-scrollbar-button {
+  height: 0px;
+}
+
+::selection {
+  @apply bg-teal-300; /* WebKit/Blink Browsers */
+}
+
 /*! purgecss end ignore */
 
 @tailwind utilities;

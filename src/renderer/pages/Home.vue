@@ -20,31 +20,36 @@
     </ul>
 
     <loader v-else /> -->
-    <div v-if="progress.total" class="my-3">
-      <span>מוריד כרגע: {{ progress.current }}</span>
-      <span class="mr-6">{{ progress.done }}/{{ progress.total }}</span>
+    <div v-if="progress.current" class="my-3">
+      <span>
+        <span class="text-gray-400">מוריד כרגע:</span>
+        <strong>{{ progress.current }}</strong>
+      </span>
+      <!-- <span class="mr-6">{{ progress.done }}/{{ progress.total }}</span> -->
     </div>
 
-    <button @click="downloadAllCategories" class="px-3 py-1 text-blue-500 bg-blue-100 rounded">הורד כל הקטוריות</button>
-
+    <button @click="buildCategoryTree" class="px-3 py-1 text-blue-500 bg-blue-100 rounded">הורד כל הקטוריות</button>
+    <!--
     <ul class="mt-4">
       <li v-for="cat in catTree" :key="cat.pageid">
         {{ cat.title.replace('קטגוריה:', '') }}
       </li>
-    </ul>
+    </ul> -->
+    <tree-view />
   </div>
 </template>
 
 <script>
 import { getAllTalkPages, getSubcategories } from '../helpers/wiki';
 import { mapState, mapActions } from 'vuex';
+import TreeView from '../components/TreeView';
 
 export default {
   name: 'Home',
+  components: { TreeView },
   data() {
     return {
       pages: [],
-      catTree: [],
       progress: {
         total: undefined,
         done: undefined,
@@ -70,22 +75,33 @@ export default {
     async buildCategoryTree() {
       const rootCats = await getSubcategories('קטגוריה:עץ קטגוריות ראשי');
 
+      // debugging =====================
+      const isDebug = false;
+      const limit = 20;
+      let level = 0;
+      // ===============================
+
       const getChildren = async cats => {
-        if (cats.some(cat => cat.type == 'subcat' && !cat.subcats)) {
+        level++;
+        if (cats.some(cat => cat.type == 'subcat' && !cat.subcats) && (level <= limit || !isDebug)) {
           console.log('diving deeper...', cats);
           cats.forEach(async cat => {
             if (cat.type == 'subcat') {
+              this.progress.current = cat.title;
               let subcats = await getSubcategories(cat.title);
               cat.subcats = await getChildren(subcats);
             }
           });
         } else {
+          this.progress.current = cats.length ? cats[0].title : '---';
           console.log('coming out...', cats);
-          return cats;
         }
+        return cats;
       };
 
       this.catTree = await getChildren(rootCats);
+      this.progress.current = undefined;
+      // console.log(this.catTree);
     },
     getCategories() {
       this.$wiki.getCategories((err, cats) => {
@@ -141,11 +157,10 @@ export default {
       });
     },
   },
-  mounted() {
+  async mounted() {
     if (!this.categories.length) {
       this.getCategories();
     }
-    this.buildCategoryTree();
   },
 };
 </script>
