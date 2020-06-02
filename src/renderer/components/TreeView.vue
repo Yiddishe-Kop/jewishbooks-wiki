@@ -11,6 +11,7 @@
         :checkbox="i === 0"
         :list="col"
         :size="i === 0 ? 'large' : 'medium'"
+        :ref="`column${i}`"
         @select="selectItem($event, i)"
         @check="$emit('check', $event)"
       />
@@ -29,6 +30,15 @@ export default {
     return {
       columns: [this.categories],
     };
+  },
+  watch: {
+    '$route.query'() {
+      // select the category by the index in the route query `?cat=0`
+      const queryCatIndex = this.$route.query.cat;
+      if (typeof queryCatIndex == 'number') {
+        this.$refs.column0[0] && this.$refs.column0[0].select(this.categories[queryCatIndex], queryCatIndex);
+      }
+    },
   },
   methods: {
     selectItem(item, i) {

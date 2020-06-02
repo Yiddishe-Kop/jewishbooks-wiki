@@ -5,15 +5,27 @@
     <div class="flex items-center justify-between space-x-2">
       <div>
         <h1 class="text-3xl font-black text-gray-800">{{ decodeURIComponent($route.params.title) }}</h1>
+        <p v-if="change">
+          <span class="text-sm">
+            <span class="text-gray-500">עריכה אחרונה:</span>
+            <span>{{ new Date(change.updatedAt).toLocaleDateString() }}</span>
+          </span>
+          <span class="mr-4">{{ change.summary }}</span>
+        </p>
       </div>
-      <div class="flex">
+      <div class="relative flex">
         <button
-          @click="saveChangesLocal"
+          @click="summary.show = true"
           class="flex items-center p-2 ml-2 text-green-500 transition bg-green-100 rounded-md hover:bg-green-200"
         >
           <icon name="save" class="inline-block w-5 ml-2" />
           <span>שמור שינויים</span>
         </button>
+        <div v-if="summary.show" class="absolute p-2 bg-gray-300 rounded shadow-xl top-5">
+          <h4>אנא הזן סיכום עריכה</h4>
+          <input type="text" v-model="summary.message" class="form-input" />
+          <button @click="saveChangesLocal" class="p-2 text-white bg-indigo-700 rounded">שמור</button>
+        </div>
         <button
           v-if="online"
           @click="syncWikiArticle"
@@ -26,24 +38,15 @@
     </div>
 
     <section class="mt-12 wiki">
-      <div v-if="!!wikitext" class="grid grid-cols-2 gap-8">
-        <div class="relative">
-          <span
-            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-green-600 transform -translate-y-1/2 bg-green-100 border-2 border-green-700 rounded-full"
-            >עריכה</span
-          >
-          <textarea
-            v-model="wikitext"
-            class="w-full h-full p-4 pt-6 bg-transparent form-input focus:outline-none"
-          ></textarea>
-        </div>
-        <div class="relative p-1 bg-gray-100 rounded shadow-md">
-          <span
-            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-blue-600 transform -translate-y-1/2 bg-blue-100 border-2 border-blue-700 rounded-full"
-            >תצוגה מקדימה</span
-          >
-          <vue-wikitext :source="wikitext" class="p-4 pt-6" />
-        </div>
+      <div v-if="!!wikitext" class="relative">
+        <span
+          class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-green-600 transform -translate-y-1/2 bg-green-100 border-2 border-green-700 rounded-full"
+          >עריכה</span
+        >
+        <textarea
+          v-model="wikitext"
+          class="w-full min-h-screen p-4 pt-6 bg-transparent form-input focus:outline-none"
+        ></textarea>
       </div>
       <div v-else-if="!!error" v-html="error" class="my-16 text-sm text-center text-red-500"></div>
       <div v-else class="text-center text-gray-400 my-36">דף זה לא שמור במחשב שלך</div>
@@ -61,6 +64,11 @@ export default {
       article: {},
       wikitext: '',
       error: '',
+      change: undefined,
+      summary: {
+        show: false,
+        message: '!!!נערך ע״י תוכנה שפותח ע״י היידישע קאפ!!!',
+      },
     };
   },
   computed: {
@@ -68,23 +76,43 @@ export default {
     ...mapState('App', ['online']),
   },
   methods: {
-    ...mapActions('Articles', ['getArticle', 'update']),
+    open(link) {
+      this.$electron.shell.openExternal(link);
+    },
+    ...mapActions('Articles', ['getArticle', 'getChange', 'update']),
     async showArticle() {
       const article = await this.getArticle(this.$route.params.id);
 
       if (article) {
         this.article = article;
         this.wikitext = article.content;
+        this.refreshChange();
+      }
+    },
+    async refreshChange() {
+      let change = await this.getChange(this.article.id);
+      if (change) {
+        this.change = change;
+        this.summary.message = this.change.summary;
       }
     },
     loginToWiki(callback) {
       this.$wiki.logIn('Yiddishe Kop', '82117907', callback);
     },
-    saveChangesLocal() {
+    async saveChangesLocal() {
+      this.summary.show = false;
       this.update({
-        title: this.article.title,
-        content: this.wikitext,
+        article: {
+          id: this.article.id,
+          content: this.wikitext,
+        },
+        change: {
+          id: this.article.id,
+          summary: this.summary.message,
+          updatedAt: new Date(),
+        },
       });
+      this.refreshChange();
     },
     async syncWikiArticle() {
       await this.saveChangesLocal();

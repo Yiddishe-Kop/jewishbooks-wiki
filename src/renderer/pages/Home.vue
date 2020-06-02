@@ -55,6 +55,7 @@ export default {
       return this.categories.filter(cat => cat.selected).length;
     },
   },
+
   methods: {
     ...mapActions('Articles', ['store']),
 

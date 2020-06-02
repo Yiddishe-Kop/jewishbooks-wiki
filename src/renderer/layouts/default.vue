@@ -17,15 +17,14 @@
     <section class="h-full p-1 overflow-y-auto bg-gray-400" style="width: 220px">
       <h1 class="mt-4 text-xl font-semibold">קטגוריות</h1>
       <ul v-if="categories.length" class="mt-3 space-y-1">
-        <li class="block p-2 transition bg-gray-100 rounded hover:bg-teal-50" v-for="cat in categories" :key="cat">
-          {{ cat.replace('קטגוריה:', '') }}
-          <!-- <router-link
+        <li v-for="(cat, i) in categories" :key="cat">
+          <router-link
             exact-active-class="text-teal-800 bg-teal-100 hover:bg-teal-200"
-            :to="`/articles/${encodeURIComponent(article.title)}`"
+            :to="{ name: 'home', query: { cat: i } }"
             class="block p-2 transition bg-gray-100 rounded hover:bg-teal-50"
           >
-            {{ article.title }}
-          </router-link> -->
+            {{ cat.replace('קטגוריה:', '') }}
+          </router-link>
         </li>
       </ul>
       <div v-else class="py-10 mt-4 text-center">
