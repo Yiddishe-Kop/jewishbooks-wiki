@@ -9,7 +9,7 @@ const openLoginWindow = () => {
     resizable: false,
     title: 'Login',
     frame: false,
-    height: 500,
+    height: 550,
     width: 400,
     useContentSize: true,
     backgroundColor: '#2d3748',

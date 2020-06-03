@@ -7,7 +7,7 @@
         </h2>
         <p class="text-gray-600">{{ online ? 'סמן קטגוריות שברצונך להוריד למחשב שלך' : 'תפריט של כל הקטגוריות' }}</p>
       </div>
-      <div class="flex mt-4 md:mt-0 md:ml-4">
+      <div class="flex mt-4 mr-4">
         <span class="mr-3 rounded-md shadow-sm">
           <button
             @click="downloadCategoryPages"
@@ -25,12 +25,11 @@
       </div>
     </div>
 
-    <tree-view :categories="categories" @check="checkCategory" class="mt-6" ref="treeView" />
+    <tree-view :categories="categories" @check="checkCategory" class="mt-6" />
   </div>
 </template>
 
 <script>
-import { getAllTalkPages, getSubcategories, getArticle } from '../helpers/wiki';
 import { mapState, mapActions } from 'vuex';
 import TreeView from '../components/TreeView';
 import catTree from '../assets/categoryTree.json';
@@ -60,7 +59,7 @@ export default {
     ...mapActions('Articles', ['store']),
 
     async buildCategoryTree() {
-      const rootCats = await getSubcategories('קטגוריה:עץ קטגוריות ראשי');
+      const rootCats = await this.$wiki.getSubcategories('קטגוריה:עץ קטגוריות ראשי');
 
       // debugging =====================
       const isDebug = false;
@@ -75,7 +74,7 @@ export default {
           cats.forEach(async cat => {
             if (cat.type == 'subcat') {
               this.progress.current = cat.title;
-              let subcats = await getSubcategories(cat.title);
+              let subcats = await this.$wiki.getSubcategories(cat.title);
               cat.subcats = await getChildren(subcats);
             }
           });
@@ -92,18 +91,17 @@ export default {
     },
 
     async downloadCategoryPages() {
-      let pageIds = this.$refs.treeView.categories
+      let pageIds = this.categories
         .filter(cat => cat.selected)
         .reduce(flat, [])
         .filter(c => c.type == 'page')
-        .map(c => c.pageid);
+        .map(c => c.pageid); // maybe add the title? 🤔
 
       pageIds = [...new Set(pageIds)]; // remove duplicates
 
       console.log(`Downloading ${pageIds.length} pages...`);
-
       pageIds.forEach(async (pageId, i) => {
-        const pageContent = await getArticle(pageId);
+        const pageContent = await this.$wiki.getArticle(pageId);
         console.log(`Downloaded page ${i + 1}...`);
         this.store({
           id: pageId,
@@ -126,9 +124,7 @@ export default {
       }
     },
     checkCategory(e) {
-      console.log({ e });
       this.$set(this.categories[e.i], 'selected', e.value);
-      // this.categories[e.i].selected = e.value;
     },
   },
   async mounted() {},

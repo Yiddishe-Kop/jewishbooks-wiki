@@ -61,7 +61,7 @@
           יצירת חשבון
         </button>
       </div>
-      <loader v-else />
+      <loader v-else class="mt-3 light" />
     </div>
   </div>
 </template>
@@ -84,22 +84,21 @@ export default {
   },
   methods: {
     ...mapActions('App', ['loginUser']),
-    attemptLogin() {
+    async attemptLogin() {
       this.isLoading = true;
       this.err = '';
-      this.$wiki.logIn(this.name, this.password, (err, res) => {
-        this.isLoading = false;
-        if (err) {
-          this.err = err;
-          return;
-        }
+      try {
+        const loginResult = await this.$wiki.logIn(this.name, this.password);
         this.loginUser({ name: this.name, password: this.password });
-      });
+      } catch (err) {
+        this.err = err;
+      }
+      this.isLoading = false;
     },
     createAccount() {
       this.isLoading = true;
       this.err = '';
-      this.$wiki.createAccount(this.name, this.password, (err, res) => {
+      this.$wiki.Bot.createAccount(this.name, this.password, (err, res) => {
         this.isLoading = false;
         if (err) {
           this.err = err;

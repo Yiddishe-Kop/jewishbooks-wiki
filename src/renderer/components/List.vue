@@ -4,32 +4,34 @@
       v-for="(item, i) in list"
       :key="item.pageid"
       @click="select(item, i)"
-      class="block transition duration-150 ease-in-out cursor-pointer select-none hover:bg-gray-50 focus:outline-none focus:bg-gray-50"
+      class="block transition duration-150 ease-in-out cursor-pointer select-none hover:bg-gray-200 focus:outline-none focus:bg-gray-200"
       :class="{ active: selected === i }"
     >
-      <div class="flex items-center px-4 py-4 sm:px-6">
+      <div class="flex items-center px-3 py-2">
         <div class="flex items-center flex-1 min-w-0">
           <div v-if="checkbox" class="flex-shrink-0">
             <input
               type="checkbox"
               @change="$emit('check', { value: $event.target.checked, category: item.title, i })"
-              class="form-input"
+              class="form-checkbox"
             />
           </div>
-          <div class="flex-1 min-w-0 px-4 md:grid md:grid-cols-2 md:gap-4">
+          <div class="flex-1 min-w-0 px-4">
             <div class="flex items-center">
               <div
                 class="font-bold leading-5 text-gray-700 whitespace-no-wrap siddur"
                 :class="{
-                  'text-3xl -mt-4': size == 'large',
-                  'text-2xl -mt-3': size == 'medium',
-                  'text-xl -mt-1': size == 'small',
+                  'text-2xl -mt-4': size == 'large',
+                  'text-xl -mt-3': size == 'medium',
+                  'text-lg -mt-1': size == 'small',
                 }"
               >
                 {{ item.title.replace('קטגוריה:', '') }}
               </div>
-              <span class="mr-2 font-sans text-sm font-light leading-5 text-gray-500 whitespace-no-wrap english"
-                >/ {{ item.title }}</span
+              <span
+                v-if="item.subcats"
+                class="mr-2 font-sans text-sm font-light leading-5 text-gray-500 whitespace-no-wrap english"
+                >/ {{ item.subcats.length }} פריטים</span
               >
             </div>
           </div>
@@ -46,6 +48,7 @@
         <div v-else-if="item.type == 'page'" class="flex items-center">
           <span class="relative z-0 inline-flex shadow-sm">
             <router-link
+              title="ערוך עמוד זה"
               v-if="isSaved(item.pageid)"
               :to="`/articles/${encodeURIComponent(item.title)}/${item.pageid}`"
               class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
@@ -54,6 +57,7 @@
             </router-link>
             <button
               v-else
+              title="הורד עמוד זה"
               @click="downloadArticle(item.pageid)"
               :class="[online ? '' : 'opacity-25']"
               class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
@@ -108,13 +112,7 @@ export default {
 <style lang="scss" scoped>
 ul {
   li.active {
-    @apply bg-gray-200 border-r-2 border-brand;
-    &:hover {
-      @apply bg-gray-300;
-    }
-    &:focus {
-      @apply bg-gray-200;
-    }
+    @apply bg-blue-100 border-r-2 border-brand;
   }
   li.active,
   li:hover {

@@ -4,7 +4,7 @@
 
     <div class="flex items-center justify-between space-x-2">
       <div>
-        <h1 class="text-3xl font-black text-gray-800">{{ decodeURIComponent($route.params.title) }}</h1>
+        <h1 class="text-3xl font-black text-gray-800">{{ title }}</h1>
         <p v-if="change">
           <span class="text-sm">
             <span class="text-gray-500">עריכה אחרונה:</span>
@@ -21,10 +21,13 @@
           <icon name="save" class="inline-block w-5 ml-2" />
           <span>שמור שינויים</span>
         </button>
-        <div v-if="summary.show" class="absolute p-2 bg-gray-300 rounded shadow-xl top-5">
-          <h4>אנא הזן סיכום עריכה</h4>
-          <input type="text" v-model="summary.message" class="form-input" />
-          <button @click="saveChangesLocal" class="p-2 text-white bg-indigo-700 rounded">שמור</button>
+        <div v-if="summary.show" class="absolute z-20 w-64 p-2 font-semibold rounded shadow-xl bg-gray-80 top-11">
+          <h4>אנא הזן סיכום עריכה:</h4>
+          <textarea type="text" v-model="summary.message" class="w-full form-input"></textarea>
+          <div class="flex items-center justify-end mt-2">
+            <button @click="cancelChanges" class="px-2 ml-2 text-indigo-600 bg-indigo-100 rounded">בטל</button>
+            <button @click="saveChangesLocal" class="px-2 text-white bg-indigo-700 rounded">שמור</button>
+          </div>
         </div>
         <button
           v-if="online"
@@ -73,7 +76,10 @@ export default {
   },
   computed: {
     ...mapState('Articles', ['articles']),
-    ...mapState('App', ['online']),
+    ...mapState('App', ['online', 'auth']),
+    title() {
+      return decodeURIComponent(this.$route.params.title);
+    },
   },
   methods: {
     open(link) {
@@ -96,9 +102,6 @@ export default {
         this.summary.message = this.change.summary;
       }
     },
-    loginToWiki(callback) {
-      this.$wiki.logIn('Yiddishe Kop', '82117907', callback);
-    },
     async saveChangesLocal() {
       this.summary.show = false;
       this.update({
@@ -107,6 +110,7 @@ export default {
           content: this.wikitext,
         },
         change: {
+          title: this.title,
           id: this.article.id,
           summary: this.summary.message,
           updatedAt: new Date(),
@@ -114,21 +118,19 @@ export default {
       });
       this.refreshChange();
     },
+    cancelChanges() {
+      this.summary.show = false;
+    },
     async syncWikiArticle() {
       await this.saveChangesLocal();
-      this.loginToWiki((err, data) => {
-        if (err) return;
-        this.$wiki.edit(
-          this.article.title,
-          this.wikitext,
-          '!!!נערך ע״י תוכנה שפותח ע״י היידישע קאפ!!!',
-          false,
-          (err, data) => {
-            if (err) return;
-            console.log({ data });
-          }
-        );
-      });
+      try {
+        const loginResult = await this.$wiki.logIn(this.auth.user.name, this.auth.user.password);
+        const editResult = await this.$wiki.edit(this.title, this.wikitext, this.summary.message, false);
+        console.log({ loginResult, editResult });
+        window.alert('העמוד נשמר בהצלחה!');
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
   watch: {

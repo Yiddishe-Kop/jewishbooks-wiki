@@ -23,7 +23,7 @@
 import List from './List';
 
 export default {
-  name: 'IndexView',
+  name: 'TreeView',
   components: { List },
   props: ['categories'],
   data() {
@@ -32,12 +32,15 @@ export default {
     };
   },
   watch: {
-    '$route.query'() {
-      // select the category by the index in the route query `?cat=0`
-      const queryCatIndex = this.$route.query.cat;
-      if (typeof queryCatIndex == 'number') {
-        this.$refs.column0[0] && this.$refs.column0[0].select(this.categories[queryCatIndex], queryCatIndex);
-      }
+    '$route.query': {
+      immediate: true,
+      handler: function() {
+        // select the category by the index in the route query `?cat=0`
+        const queryCatIndex = this.$route.query.cat;
+        if (typeof queryCatIndex == 'number' && this.$refs.column0) {
+          this.$refs.column0[0] && this.$refs.column0[0].select(this.categories[queryCatIndex], queryCatIndex);
+        }
+      },
     },
   },
   methods: {

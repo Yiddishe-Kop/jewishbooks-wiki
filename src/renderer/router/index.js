@@ -21,19 +21,19 @@ const router = new Router({
       component: require('@/pages/Home').default
     },
     {
-      path: '/add',
-      name: 'add',
-      component: require('@/pages/Add').default
-    },
-    {
-      path: '/wiki',
-      name: 'wiki',
-      component: require('@/pages/Edit').default
-    },
-    {
       path: '/articles/:title/:id',
       name: 'show-article',
       component: require('@/pages/Edit').default
+    },
+    {
+      path: '/changes',
+      name: 'changes',
+      component: require('@/pages/Changes').default
+    },
+    {
+      path: '/add',
+      name: 'add',
+      component: require('@/pages/Add').default
     },
     {
       path: '*',

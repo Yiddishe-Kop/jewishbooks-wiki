@@ -87,6 +87,11 @@ export default {
           icon: 'home',
         },
         {
+          to: { name: 'changes' },
+          label: 'העריכות שלי',
+          icon: 'collection',
+        },
+        {
           to: { name: 'add' },
           label: 'הוספה',
           icon: 'add-circle',
