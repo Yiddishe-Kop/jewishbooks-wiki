@@ -25,25 +25,36 @@
       </div>
     </div>
 
+    <task-progress
+      v-if="progress.active"
+      label="מוריד"
+      :currentTitle="progress.currentTitle"
+      :total="progress.total"
+      :done="progress.done"
+      class="mt-4"
+    />
+
     <tree-view :categories="categories" @check="checkCategory" class="mt-6" />
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import TaskProgress from '../components/ui/TaskProgress';
 import TreeView from '../components/TreeView';
 import catTree from '../assets/categoryTree.json';
 
 export default {
   name: 'Home',
-  components: { TreeView },
+  components: { TreeView, TaskProgress },
   data() {
     return {
       categories: catTree,
       progress: {
-        total: undefined,
-        done: undefined,
-        current: undefined,
+        active: false,
+        currentTitle: '',
+        total: 0,
+        done: 0,
       },
     };
   },
@@ -100,14 +111,23 @@ export default {
       pageIds = [...new Set(pageIds)]; // remove duplicates
 
       console.log(`Downloading ${pageIds.length} pages...`);
-      pageIds.forEach(async (pageId, i) => {
+      this.progress = {
+        active: true,
+        currentTitle: 'מתחיל...',
+        total: pageIds.length,
+        done: 0,
+      };
+
+      for (const pageId of pageIds) {
+        this.progress.currentTitle = pageId;
+        this.progress.done++;
         const pageContent = await this.$wiki.getArticle(pageId);
-        console.log(`Downloaded page ${i + 1}...`);
         this.store({
           id: pageId,
           content: pageContent,
         });
-      });
+      }
+      this.progress.active = false;
 
       function flat(r, a) {
         var b = {};

@@ -8,9 +8,16 @@
           :key="link.to.name"
           :to="link.to"
           exact-active-class="text-teal-400 bg-teal-900 no-drag shadow-outline-teal hover:bg-teal-800"
-          class="block p-1.5 bg-gray-800 text-gray-200 shadow-outline-gray rounded-full hover:bg-gray-700 transition"
+          class="block relative p-1.5 bg-gray-800 text-gray-200 shadow-outline-gray rounded-full hover:bg-gray-700 transition"
         >
           <icon :name="link.icon" class="w-6" />
+          <span
+            v-if="link.count"
+            style="top: 3px; right: 3px;"
+            class="absolute px-1.5 text-xs font-semibold text-gray-700 transform translate-x-1/2 -translate-y-1/2 bg-gray-100 rounded-full"
+          >
+            {{ link.count }}
+          </span>
         </router-link>
       </nav>
     </div>
@@ -80,7 +87,13 @@ export default {
   data() {
     return {
       categories: catTree.map(cat => cat.title),
-      links: [
+    };
+  },
+  computed: {
+    ...mapState('App', ['online']),
+    ...mapState('Articles', ['changes']),
+    links() {
+      return [
         {
           to: { name: 'home' },
           label: 'בית',
@@ -90,17 +103,15 @@ export default {
           to: { name: 'changes' },
           label: 'העריכות שלי',
           icon: 'collection',
+          count: this.changes.length,
         },
         {
           to: { name: 'add' },
           label: 'הוספה',
           icon: 'add-circle',
         },
-      ],
-    };
-  },
-  computed: {
-    ...mapState('App', ['online']),
+      ];
+    },
   },
   methods: {
     ...mapActions('App', ['goOnline', 'goOffline']),

@@ -73,7 +73,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { getArticle } from '../helpers/wiki';
 
 export default {
   name: 'List',
@@ -94,7 +93,7 @@ export default {
     },
     async downloadArticle(id) {
       if (!this.online) return;
-      const pageContent = await getArticle(id);
+      const pageContent = await this.$wiki.getArticle(id);
       console.log(`Downloaded page ${id}...`);
       this.store({
         id,

@@ -10,9 +10,9 @@
       <div class="flex mt-4 mr-4">
         <span class="mr-3 rounded-md shadow-sm">
           <button
-            @click="syncAllWikiArticles"
+            @click="syncAllWikiChanges"
             :class="[
-              online
+              online && myChanges.length
                 ? 'bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700'
                 : 'bg-indigo-100',
             ]"
@@ -25,7 +25,14 @@
       </div>
     </div>
 
-    <task-progress percentageDone="73" label="מעלה" currentTitle="helloooo!" class="mt-4" />
+    <task-progress
+      v-if="progress.active"
+      label="מעלה"
+      :currentTitle="progress.currentTitle"
+      :total="progress.total"
+      :done="progress.done"
+      class="mt-4"
+    />
 
     <wide-list v-if="myChanges.length" class="mt-8" :items="myChanges" @delete="deleteChange"></wide-list>
     <div v-else class="py-32 mt-8 text-center bg-gray-100 rounded-lg">
@@ -42,6 +49,16 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'Changes',
   components: { WideList, TaskProgress },
+  data() {
+    return {
+      progress: {
+        active: false,
+        currentTitle: '',
+        total: 0,
+        done: 0,
+      },
+    };
+  },
   computed: {
     ...mapState('App', ['auth', 'online']),
     ...mapState('Articles', ['articles', 'changes']),
@@ -56,18 +73,29 @@ export default {
   },
   methods: {
     ...mapActions('Articles', ['deleteChange']),
-    async syncAllWikiArticles() {
+    async syncAllWikiChanges() {
+      if (!this.myChanges.length) return;
+      this.progress = {
+        active: true,
+        currentTitle: 'מאמת...',
+        total: this.myChanges.length,
+        done: 0,
+      };
+      const loginResult = await this.$wiki.logIn(this.auth.user.name, this.auth.user.password);
+      console.log({ loginResult });
       try {
-        const loginResult = await this.$wiki.logIn(this.auth.user.name, this.auth.user.password);
-        await this.changes.forEach(async change => {
-          const article = this.articles.find(a => a.id == change.id);
-          const editResult = await this.$wiki.edit(change.title, article.content, change.summary, false);
-          console.log({ loginResult, editResult });
-        });
-        window.alert('העמודים נשמרו בהצלחה!');
+        for (const change of this.myChanges) {
+          this.progress.currentTitle = change.title;
+          this.progress.done++;
+          const editResult = await this.$wiki.edit(change.title, change.article.content, change.summary, false);
+          this.deleteChange({ id: change.id, force: true }); // delete the local change after uploading
+          console.log({ editResult }, this.progress.done);
+        }
+        this.progress.active = false;
       } catch (err) {
         window.alert('שגיאה בהעלאת השינויים שלך:\n' + err);
         console.error(err);
+        this.progress.active = false;
       }
     },
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-hidden bg-white shadow sm:rounded-md">
-    <ul>
+    <ul class="divide-y divide-gray-400">
       <li v-for="item in items" :key="item.id">
         <router-link
           :to="`/articles/${encodeURIComponent(item.title)}/${item.id}`"

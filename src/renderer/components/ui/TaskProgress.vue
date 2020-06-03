@@ -16,11 +16,14 @@
 <script>
 export default {
   name: 'TaskProgress',
-  props: ['label', 'currentTitle', 'percentageDone'],
+  props: ['label', 'currentTitle', 'total', 'done'],
   data() {
     return {};
   },
   computed: {
+    percentageDone() {
+      return ((this.done / this.total) * 100).toFixed(0);
+    },
     barColor() {
       const colors = ['bg-red-400', 'bg-orange-400', 'bg-blue-400', 'bg-green-400'];
       return colors[this.convertRange(this.percentageDone, [0, 100], [0, colors.length - 1]).toFixed(0)];
@@ -39,6 +42,7 @@ export default {
   transition: all 0.3s ease;
   @apply rounded-full bg-gray-200 overflow-hidden;
   .bar {
+    transition: all 0.3s ease;
     background-image: linear-gradient(
       45deg,
       rgba(255, 255, 255, 0.35) 25%,

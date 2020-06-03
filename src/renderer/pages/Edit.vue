@@ -85,7 +85,7 @@ export default {
     open(link) {
       this.$electron.shell.openExternal(link);
     },
-    ...mapActions('Articles', ['getArticle', 'getChange', 'update']),
+    ...mapActions('Articles', ['getArticle', 'getChange', 'deleteChange', 'update']),
     async showArticle() {
       const article = await this.getArticle(this.$route.params.id);
 
@@ -100,6 +100,8 @@ export default {
       if (change) {
         this.change = change;
         this.summary.message = this.change.summary;
+      } else {
+        this.change = undefined;
       }
     },
     async saveChangesLocal() {
@@ -126,6 +128,8 @@ export default {
       try {
         const loginResult = await this.$wiki.logIn(this.auth.user.name, this.auth.user.password);
         const editResult = await this.$wiki.edit(this.title, this.wikitext, this.summary.message, false);
+        await this.deleteChange({ id: this.change.id, force: true }); // delete the local change after uploading
+        this.refreshChange();
         console.log({ loginResult, editResult });
         window.alert('העמוד נשמר בהצלחה!');
       } catch (err) {

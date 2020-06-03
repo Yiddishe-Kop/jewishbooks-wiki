@@ -118,7 +118,7 @@ class wikiAPI {
       params.titles = title;
     }
 
-    this.Bot.api.call(params, function (err, data) {
+    this.Bot.api.call(params, (err, data) => {
       if (err) {
         callback(err);
         return;

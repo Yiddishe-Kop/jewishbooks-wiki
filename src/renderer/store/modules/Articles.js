@@ -64,8 +64,8 @@ const actions = {
   getChange: ({ state }, id) => {
     return state.changes.find(a => a.id == id)
   },
-  deleteChange: ({ commit }, id) => {
-    if (window.confirm('האם אתה רוצה למחוק את השינויים לעמוד זה?')) {
+  deleteChange: ({ commit }, { id, force }) => {
+    if (force || window.confirm('האם אתה רוצה למחוק את השינויים לעמוד זה?')) {
       commit('DELETE_CHANGE', id)
     }
   },
