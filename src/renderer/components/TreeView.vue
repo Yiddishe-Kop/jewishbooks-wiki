@@ -3,7 +3,8 @@
     <section
       v-for="(col, i) in columns"
       :key="i"
-      class="overflow-y-auto column w-96"
+      class="column w-96"
+      :class="{ '-mr-3': i > 0 }"
       :style="`z-index: ${100 - i}`"
       style="min-width: 260px"
     >

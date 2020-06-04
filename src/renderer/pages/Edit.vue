@@ -4,7 +4,10 @@
 
     <div class="flex items-center justify-between space-x-2">
       <div>
-        <h1 class="text-3xl font-black text-gray-800">{{ title }}</h1>
+        <h1 class="text-3xl font-black text-gray-800">
+          <icon name="template" class="inline-block w-6" />
+          {{ title }}
+        </h1>
         <p v-if="change">
           <span class="text-sm">
             <span class="text-gray-500">עריכה אחרונה:</span>
@@ -16,7 +19,7 @@
       <div class="relative flex">
         <button
           @click="summary.show = true"
-          class="flex items-center p-2 ml-2 text-green-500 transition bg-green-100 rounded-md hover:bg-green-200"
+          class="flex items-center p-2 ml-2 text-green-500 transition bg-green-100 rounded-md shadow hover:bg-green-200"
         >
           <icon name="save" class="inline-block w-5 ml-2" />
           <span>שמור שינויים</span>
@@ -32,7 +35,7 @@
         <button
           v-if="online"
           @click="syncWikiArticle"
-          class="flex items-center p-2 text-blue-500 transition bg-blue-100 rounded-md hover:bg-blue-200"
+          class="flex items-center p-2 text-blue-500 transition bg-blue-100 rounded-md shadow hover:bg-blue-200"
         >
           <icon name="refresh" class="inline-block w-5 ml-2" />
           <span>סנכרן שינויים</span>
@@ -41,7 +44,7 @@
     </div>
 
     <section class="mt-12 wiki">
-      <div v-if="!!wikitext" class="relative">
+      <div v-if="!!wikitext" class="relative bg-white">
         <span
           class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-green-600 transform -translate-y-1/2 bg-green-100 border-2 border-green-700 rounded-full"
           >עריכה</span

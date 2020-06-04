@@ -1,10 +1,10 @@
 <template>
-  <ul class="overflow-hidden bg-gray-100 shadow sm:rounded-md">
+  <ul class="bg-white shadow sm:rounded-md">
     <li
       v-for="(item, i) in list"
       :key="item.pageid"
       @click="select(item, i)"
-      class="block transition duration-150 ease-in-out cursor-pointer select-none hover:bg-gray-200 focus:outline-none focus:bg-gray-200"
+      class="block overflow-hidden transition duration-150 ease-in-out cursor-pointer select-none hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
       :class="{ active: selected === i }"
     >
       <div class="flex items-center px-3 py-2">

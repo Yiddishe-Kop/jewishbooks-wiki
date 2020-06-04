@@ -3,6 +3,7 @@
     <div class="md:flex md:items-center md:justify-between">
       <div class="flex-1 min-w-0">
         <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
+          <icon name="home" class="inline-block w-6" />
           עץ קטגוריות ראשי
         </h2>
         <p class="text-gray-600">{{ online ? 'סמן קטגוריות שברצונך להוריד למחשב שלך' : 'תפריט של כל הקטגוריות' }}</p>

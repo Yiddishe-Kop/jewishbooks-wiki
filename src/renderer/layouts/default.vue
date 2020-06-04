@@ -67,8 +67,8 @@
         </div>
       </nav>
 
-      <main class="flex-1 overflow-auto">
-        <div class="px-4 px-5 py-6 pb-12 mx-auto bg-white max-w-7xl sm:px-6 lg:px-8">
+      <main class="flex-1 overflow-auto bg-gray-200">
+        <div class="px-4 px-5 py-6 pb-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <slot />
         </div>
       </main>
@@ -106,9 +106,9 @@ export default {
           count: this.changes.length,
         },
         {
-          to: { name: 'add' },
-          label: 'הוספה',
-          icon: 'add-circle',
+          to: { name: 'settings' },
+          label: 'הגדרות',
+          icon: 'cog',
         },
       ];
     },

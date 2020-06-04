@@ -6,7 +6,7 @@
     {
       "files": ["src/renderer/components/ui/Icon.vue"],
       "options": {
-        "printWidth": 30000
+        "printWidth": 300000
       }
     }
   ]

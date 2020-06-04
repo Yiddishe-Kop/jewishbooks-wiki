@@ -31,9 +31,9 @@ const router = new Router({
       component: require('@/pages/Changes').default
     },
     {
-      path: '/add',
-      name: 'add',
-      component: require('@/pages/Add').default
+      path: '/settings',
+      name: 'settings',
+      component: require('@/pages/Settings').default
     },
     {
       path: '*',

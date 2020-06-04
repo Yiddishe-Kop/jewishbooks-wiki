@@ -40,7 +40,7 @@ export default {
 <style lang="scss">
 .progress {
   transition: all 0.3s ease;
-  @apply rounded-full bg-gray-200 overflow-hidden;
+  @apply rounded-full bg-gray-300 shadow-inner overflow-hidden;
   .bar {
     transition: all 0.3s ease;
     background-image: linear-gradient(
