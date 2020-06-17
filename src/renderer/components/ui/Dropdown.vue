@@ -1,7 +1,8 @@
 <template>
   <transition name="menu">
     <div
-      class="absolute left-0 z-10 w-48 mt-2 overflow-hidden text-gray-700 origin-top-left bg-white rounded-md shadow-lg top-full"
+      class="absolute left-0 w-48 mt-2 overflow-hidden text-gray-700 origin-top-left bg-white rounded-md shadow-lg top-full"
+      style="z-index: 999;"
     >
       <slot />
       <div

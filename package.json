@@ -19,8 +19,8 @@
     "postinstall": "install-app-deps"
   },
   "build": {
-    "productName": "Jewish Books Wiki",
-    "appId": "com.yiddishe-kop.jewishbooks-wiki",
+    "productName": "Stender",
+    "appId": "com.yiddishe-kop.stender",
     "directories": {
       "output": "build"
     },

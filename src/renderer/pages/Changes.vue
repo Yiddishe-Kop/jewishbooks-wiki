@@ -6,7 +6,7 @@
           <icon name="collection" class="inline-block w-6" />
           העריכות שלי
         </h2>
-        <p class="text-gray-600">רשימת העריכות שלך שעדיין לא הועלו לאתר</p>
+        <p class="text-gray-600">רשימת העריכות שלי שעדיין לא הועלו לאתר</p>
       </div>
       <div class="flex mt-4 mr-4">
         <span class="mr-3 rounded-md shadow-sm">

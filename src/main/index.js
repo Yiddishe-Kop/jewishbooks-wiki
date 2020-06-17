@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, globalShortcut, dialog } from 'electron'
 // import store from '../renderer/store'
 
 /**
@@ -38,6 +38,15 @@ function createWindow() {
   })
 }
 
+function registerKeyboardShortcuts() {
+  globalShortcut.register('CommandOrControl+Left', () => {
+    BrowserWindow.getFocusedWindow().webContents.executeJavaScript('window.history.back()');
+  })
+  globalShortcut.register('CommandOrControl+Right', () => {
+    BrowserWindow.getFocusedWindow().webContents.executeJavaScript('window.history.forward()');
+  })
+}
+
 // broadcast Vuex mutations
 ipcMain.on('login', (event, user) => {
   BrowserWindow.getAllWindows().forEach(window => {
@@ -48,7 +57,10 @@ ipcMain.on('login', (event, user) => {
   })
 });
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow()
+  registerKeyboardShortcuts()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

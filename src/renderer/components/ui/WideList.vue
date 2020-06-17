@@ -11,7 +11,7 @@
               <div class="text-lg font-bold leading-5 text-gray-800 truncate">
                 {{ item.title }}
               </div>
-              <div @click.stop.prevent="$emit('delete', item.id)" class="flex flex-shrink-0 mr-2">
+              <div @click.stop.prevent="$emit('delete', { id: item.id })" class="flex flex-shrink-0 mr-2">
                 <span
                   title="מחק"
                   class="inline-flex px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full"

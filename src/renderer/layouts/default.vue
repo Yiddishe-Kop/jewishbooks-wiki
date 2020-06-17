@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-stretch h-screen" dir="rtl">
-    <div class="p-4 bg-gray-900 draggable">
-      <logo class="flex-shrink-0 w-8" />
+    <div class="flex flex-col items-center px-2 py-4 bg-gray-900 draggable">
+      <logo class="flex-shrink-0 w-16" />
       <nav class="my-8 space-y-6">
         <router-link
           v-for="link in links"

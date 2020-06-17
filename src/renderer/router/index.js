@@ -23,6 +23,11 @@ const router = new Router({
     {
       path: '/articles/:title/:id',
       name: 'show-article',
+      component: require('@/pages/Show').default
+    },
+    {
+      path: '/articles/:title/:id/edit',
+      name: 'edit-article',
       component: require('@/pages/Edit').default
     },
     {

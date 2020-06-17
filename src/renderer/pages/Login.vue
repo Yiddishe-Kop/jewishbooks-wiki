@@ -48,7 +48,7 @@
           </span>
           כניסה
         </button>
-        <button
+        <!-- <button
           @click="createAccount"
           class="relative flex justify-center w-full px-4 py-2 mt-3 text-sm font-bold leading-5 text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md group hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700"
         >
@@ -59,7 +59,7 @@
             />
           </span>
           יצירת חשבון
-        </button>
+        </button> -->
       </div>
       <loader v-else class="mt-3 light" />
     </div>

@@ -1,12 +1,12 @@
 <template>
   <div class="py-8">
-    <p class="text-gray-600">כאן אפשר לערוך דף ויקי גם אופליין</p>
+    <p class="text-gray-600">לימוד בסטנדר</p>
 
     <div class="flex items-center justify-between space-x-2">
       <div>
         <h1 class="text-3xl font-black text-gray-800">
           <icon name="template" class="inline-block w-6" />
-          עריכת: {{ title }}
+          {{ title }}
         </h1>
         <p v-if="change">
           <span class="text-sm">
@@ -18,61 +18,21 @@
       </div>
       <div class="relative flex">
         <router-link
-          :to="`/articles/${encodeURIComponent(title)}/${article.id}`"
-          class="flex items-center p-2 ml-2 text-red-500 transition bg-red-100 rounded-md shadow hover:bg-red-200"
+          :to="`/articles/${encodeURIComponent(title)}/${article.id}/edit`"
+          class="flex items-center p-2 mr-2 font-bold text-blue-500 transition bg-blue-100 rounded-md shadow hover:bg-blue-200"
         >
-          <span>ביטול</span>
+          <icon name="pencil" class="inline-block w-5 ml-2" />
+          <span>ערוך</span>
         </router-link>
-        <button
-          @click="summary.show = true"
-          class="flex items-center p-2 ml-2 text-green-500 transition bg-green-100 rounded-md shadow hover:bg-green-200"
-        >
-          <icon name="save" class="inline-block w-5 ml-2" />
-          <span>שמור שינויים</span>
-        </button>
-        <div v-if="summary.show" class="absolute z-20 w-64 p-2 font-semibold rounded shadow-xl bg-gray-80 top-11">
-          <h4>אנא הזן סיכום עריכה:</h4>
-          <textarea
-            type="text"
-            v-model="summary.message"
-            class="w-full form-input"
-            placeholder="אנא רשום כאן סיכום עריכה"
-          ></textarea>
-          <div class="flex items-center justify-end mt-2">
-            <button @click="cancelChanges" class="px-2 ml-2 text-indigo-600 bg-indigo-100 rounded">בטל</button>
-            <button @click="saveChangesLocal" class="px-2 text-white bg-indigo-700 rounded">שמור</button>
-          </div>
-        </div>
-        <button
-          v-if="online"
-          @click="syncWikiArticle"
-          class="flex items-center p-2 text-blue-500 transition bg-blue-100 rounded-md shadow hover:bg-blue-200"
-        >
-          <icon name="refresh" class="inline-block w-5 ml-2" />
-          <span>סנכרן שינויים</span>
-        </button>
       </div>
     </div>
 
     <section class="mt-12 wiki">
-      <div v-if="!!wikitext" class="relative flex items-stretch">
-        <span
-          class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-green-600 transform -translate-y-1/2 bg-green-100 border-2 border-green-700 rounded-full"
-        >
-          עריכה
-        </span>
-        <textarea
-          v-model="wikitext"
-          class="w-full min-h-screen p-4 pt-6 ml-4 bg-white form-input focus:outline-none"
-        ></textarea>
-        <div class="relative w-full min-h-screen p-4 pt-6 bg-white rounded">
-          <span
-            class="absolute top-0 right-0 px-3 mr-2 text-sm font-semibold leading-5 text-blue-600 transform -translate-y-1/2 bg-blue-100 border-2 border-blue-700 rounded-full"
-          >
-            תצוגה
-          </span>
-          <vue-wikitext :source="wikitext" />
-        </div>
+      <div v-if="!!wikitext" class="relative bg-white">
+        <vue-wikitext
+          :source="wikitext"
+          class="w-full min-h-screen p-4 pt-6 bg-transparent form-input focus:outline-none"
+        />
       </div>
       <div v-else-if="!!error" v-html="error" class="my-16 text-sm text-center text-red-500"></div>
       <div v-else class="text-center text-gray-400 my-36">דף זה לא שמור במחשב שלך</div>
@@ -84,7 +44,7 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'Edit',
+  name: 'Show',
   data() {
     return {
       article: {},
@@ -93,7 +53,7 @@ export default {
       change: undefined,
       summary: {
         show: false,
-        message: '',
+        message: '!!!נערך ע״י תוכנה שפותח ע״י היידישע קאפ!!!',
       },
     };
   },
@@ -128,7 +88,6 @@ export default {
       }
     },
     async saveChangesLocal() {
-      if (!this.summary.message) return;
       this.summary.show = false;
       this.update({
         article: {

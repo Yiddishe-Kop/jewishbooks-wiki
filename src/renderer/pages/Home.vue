@@ -69,39 +69,6 @@ export default {
 
   methods: {
     ...mapActions('Articles', ['store']),
-
-    async buildCategoryTree() {
-      const rootCats = await this.$wiki.getSubcategories('קטגוריה:עץ קטגוריות ראשי');
-
-      // debugging =====================
-      const isDebug = false;
-      const limit = 20;
-      let level = 0;
-      // ===============================
-
-      const getChildren = async cats => {
-        level++;
-        if (cats.some(cat => cat.type == 'subcat' && !cat.subcats) && (level <= limit || !isDebug)) {
-          console.log('diving deeper...', cats);
-          cats.forEach(async cat => {
-            if (cat.type == 'subcat') {
-              this.progress.current = cat.title;
-              let subcats = await this.$wiki.getSubcategories(cat.title);
-              cat.subcats = await getChildren(subcats);
-            }
-          });
-        } else {
-          this.progress.current = cats.length ? cats[0].title : '---';
-          console.log('coming out...', cats);
-        }
-        return cats;
-      };
-
-      this.catTree = await getChildren(rootCats);
-      this.progress.current = undefined;
-      // console.log(this.catTree);
-    },
-
     async downloadCategoryPages() {
       let pageIds = this.categories
         .filter(cat => cat.selected)
