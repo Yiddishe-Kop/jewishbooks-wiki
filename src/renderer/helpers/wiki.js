@@ -105,8 +105,8 @@ class wikiAPI {
     let params = {
       action: 'query',
       prop: 'revisions',
-      rvprop: 'content',
-      rand: this.Bot.getRand()
+      rvprop: 'ids|content',
+      // rand: this.Bot.getRand()
     };
 
     // both page ID or title can be provided

@@ -46,8 +46,9 @@
             <div class="w-3 h-3 ml-4 rounded-full" :class="online ? 'bg-green-400' : 'bg-orange-400'"></div>
             <div class="flex items-center ml-4 md:ml-6">
               <button
+                @click="searchIsOpen = !searchIsOpen"
                 class="p-1 text-gray-400 border-2 border-transparent rounded-full focus:outline-none hover:text-white focus:focus:outline-none focus:text-white focus:bg-gray-700"
-                aria-label="Notifications"
+                aria-label="Search"
               >
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -73,20 +74,23 @@
         </div>
       </main>
     </div>
+    <search :is-open.sync="searchIsOpen" />
   </div>
 </template>
 
 <script>
 import Logo from '../components/Logo';
+import Search from '../components/ui/Search';
 import UserAvatar from '../components/ui/UserAvatar';
 import { mapState, mapActions } from 'vuex';
 import catTree from '../assets/categoryTree.json';
 
 export default {
-  components: { Logo, UserAvatar },
+  components: { Logo, Search, UserAvatar },
   data() {
     return {
       categories: catTree.map(cat => cat.title),
+      searchIsOpen: false,
     };
   },
   computed: {
@@ -122,6 +126,7 @@ export default {
   mounted() {
     window.addEventListener('online', this.monitorOnlineStatus);
     window.addEventListener('offline', this.monitorOnlineStatus);
+    window.addEventListener('open-search', () => (this.searchIsOpen = true));
     this.monitorOnlineStatus();
   },
 };

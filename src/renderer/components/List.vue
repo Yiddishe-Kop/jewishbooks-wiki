@@ -94,11 +94,12 @@ export default {
     async downloadArticle(id) {
       if (!this.online) return;
       const pageContent = await this.$wiki.getArticle(id);
-      console.log(`Downloaded page ${id}...`);
-      this.store({
+      console.log(`Downloaded page ${id}...`, { pageContent });
+      await this.store({
         id,
         content: pageContent,
       });
+      console.log('KKK!!!');
     },
     select(item, i) {
       this.selected = i;

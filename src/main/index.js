@@ -45,6 +45,11 @@ function registerKeyboardShortcuts() {
   globalShortcut.register('CommandOrControl+Right', () => {
     BrowserWindow.getFocusedWindow().webContents.executeJavaScript('window.history.forward()');
   })
+  globalShortcut.register('CommandOrControl+F', () => {
+    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(`
+      window.dispatchEvent(new Event('open-search'))
+    `);
+  })
 }
 
 // broadcast Vuex mutations

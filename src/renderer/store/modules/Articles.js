@@ -40,8 +40,11 @@ const actions = {
     return state.articles.find(a => a.id == id)
   },
   async store({ dispatch, commit }, article) {
-    if (await dispatch('getArticle', article.id)) return // it's already saved
-    commit('CREATE_ARTICLE', article)
+    return new Promise(async (resolve, reject) => {
+      if (await dispatch('getArticle', article.id)) return // it's already saved
+      commit('CREATE_ARTICLE', article)
+      resolve()
+    })
   },
   update({ commit }, { article, change }) {
     commit('UPDATE_OR_CREATE_CHANGE', change)
@@ -52,9 +55,9 @@ const actions = {
       type: 'warning',
       buttons: ['Cancel', 'Delete'],
       defaultId: 0,
-      title: `Delete article`,
-      message: `Are you sure you want to delete the article?`,
-      detail: 'This is irreversible.',
+      title: `מחק עמוד`,
+      message: `האם אתה בטוח שברצונך למחוק עמוד זה מהמחשב שלך?`,
+      detail: 'תוכל תמיד להוריד את העמוד שוב.',
     }).then(({ response }) => {
       if (response === 1) commit('DELETE_ARTICLE', id)
     }).catch(e => console.log({ e }))

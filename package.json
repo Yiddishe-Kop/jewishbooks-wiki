@@ -1,6 +1,6 @@
 {
   "name": "jewishbooks-wiki",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Yehuda Neufeld <newgraphil@gmail.com>",
   "description": "Edit Jewishbooks Wiki offline",
   "license": null,
@@ -63,6 +63,8 @@
     "axios": "^0.18.0",
     "deepmerge": "^4.2.2",
     "electron-store": "^5.1.1",
+    "fuse.js": "^3.4.6",
+    "lodash": "^4.17.15",
     "nodemw": "^0.13.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
