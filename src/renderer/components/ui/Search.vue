@@ -55,20 +55,16 @@
 </template>
 
 <script>
-import Fuse from 'fuse.js';
-import catTree from '../../assets/categoryTree.json';
+import fuzeSearch from '../../helpers/search';
 import throttle from 'lodash/throttle';
-import uniqBy from 'lodash/uniqBy';
 
-// The Fuse instance [fuzzy search]
-let fuse;
+const MAX_SEARCH_RESULTS = 50;
 
 export default {
   name: 'Search',
   props: ['isOpen'],
   data() {
     return {
-      categoryTree: catTree,
       search: '',
       results: [],
       selected: 0,
@@ -77,8 +73,8 @@ export default {
   watch: {
     search: {
       handler: throttle(function(newVal) {
-        const results = fuse.search(this.search);
-        this.results = results.slice(0, 20);
+        const results = fuzeSearch.search(this.search);
+        this.results = results.slice(0, MAX_SEARCH_RESULTS);
         if (newVal.length == 0) {
           this.selected = 0;
         }
@@ -124,48 +120,6 @@ export default {
       this.$router.push(url || this.url(item.title, item.pageid));
       this.close();
     },
-    normalizedSearchList() {
-      const flattenObject = ob => {
-        var toReturn = {};
-
-        for (var i in ob) {
-          if (!ob.hasOwnProperty(i)) continue;
-
-          if (typeof ob[i] == 'object') {
-            var flatObject = flattenObject(ob[i]);
-            for (var x in flatObject) {
-              if (!flatObject.hasOwnProperty(x)) continue;
-
-              toReturn[i + '.' + x] = flatObject[x];
-            }
-          } else {
-            toReturn[i] = ob[i];
-          }
-        }
-        return toReturn;
-      };
-      let flattened = flattenObject(this.categoryTree);
-      console.log(Object.keys(flattened).length);
-
-      let searchList = [];
-      for (let key in flattened) {
-        if (flattened[key] == 'page') {
-          let pageid = key.replace('type', 'pageid');
-          searchList.push({
-            title: flattened[key.replace('type', 'title')],
-            pageid: flattened[pageid],
-          });
-        }
-      }
-      return uniqBy(searchList, 'pageid');
-    },
-  },
-  created() {
-    const searchList = this.normalizedSearchList();
-    fuse = new Fuse(searchList, {
-      threshold: 0.3,
-      keys: ['title'],
-    });
   },
 };
 </script>

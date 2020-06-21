@@ -24,6 +24,7 @@ module.exports = {
       },
       fontFamily: {
         sbl: ['SBLhebrew', 'siddur', 'Heebo var', 'Inter var'],
+        siddur: ['siddur', 'Heebo var', 'Inter var'],
         sans: ['Inter var', 'Heebo var', ...defaultTheme.fontFamily.sans],
         mono: ['Cascadia', ...defaultTheme.fontFamily.mono], // font for code snippets 😎
       },

@@ -83,13 +83,12 @@ import Logo from '../components/Logo';
 import Search from '../components/ui/Search';
 import UserAvatar from '../components/ui/UserAvatar';
 import { mapState, mapActions } from 'vuex';
-import catTree from '../assets/categoryTree.json';
 
 export default {
   components: { Logo, Search, UserAvatar },
   data() {
     return {
-      categories: catTree.map(cat => cat.title),
+      categories: this.$jewishBooks.categoryTree.map(cat => cat.title),
       searchIsOpen: false,
     };
   },

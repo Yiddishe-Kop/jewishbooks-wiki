@@ -21,7 +21,7 @@
           :to="`/articles/${encodeURIComponent(title)}/${article.id}`"
           class="flex items-center p-2 ml-2 text-red-500 transition bg-red-100 rounded-md shadow hover:bg-red-200"
         >
-          <span>ביטול</span>
+          <span>חזור</span>
         </router-link>
         <button
           @click="summary.show = true"
@@ -81,10 +81,12 @@
 </template>
 
 <script>
+import VueWikitext from '../components/VueWikitext';
 import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'Edit',
+  components: { VueWikitext },
   data() {
     return {
       article: {},
@@ -171,11 +173,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.wiki {
-  a {
-    @apply text-blue-300;
-  }
-}
-</style>

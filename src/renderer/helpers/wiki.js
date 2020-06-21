@@ -9,7 +9,7 @@ import Bot from 'nodemw'
  *  2. To add some methods that weren't available in the library / more control on the params
  *  -----------------------------------------------------------------------------------------
  */
-class wikiAPI {
+export default class wikiAPI {
 
   /**
    * The API results limit for one request
@@ -139,8 +139,3 @@ class wikiAPI {
     return obj[key];
   }
 }
-
-
-
-
-export default new wikiAPI()

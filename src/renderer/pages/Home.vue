@@ -43,14 +43,13 @@
 import { mapState, mapActions } from 'vuex';
 import TaskProgress from '../components/ui/TaskProgress';
 import TreeView from '../components/TreeView';
-import catTree from '../assets/categoryTree.json';
 
 export default {
   name: 'Home',
   components: { TreeView, TaskProgress },
   data() {
     return {
-      categories: catTree,
+      categories: this.$jewishBooks.categoryTree,
       progress: {
         active: false,
         currentTitle: '',

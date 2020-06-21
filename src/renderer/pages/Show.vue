@@ -31,11 +31,8 @@
     </div>
 
     <section class="mt-12 wiki">
-      <div v-if="!!wikitext" class="relative bg-white">
-        <vue-wikitext
-          :source="wikitext"
-          class="w-full min-h-screen p-4 pt-6 bg-transparent form-input focus:outline-none"
-        />
+      <div v-if="!!wikitext" class="relative bg-white rounded shadow">
+        <vue-wikitext :source="wikitext" class="w-full min-h-screen p-8" />
       </div>
       <div v-else-if="!!error" v-html="error" class="my-16 text-sm text-center text-red-500"></div>
       <div v-else class="text-center text-gray-500 my-36">
@@ -50,10 +47,12 @@
 </template>
 
 <script>
+import VueWikitext from '../components/VueWikitext';
 import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'Show',
+  components: { VueWikitext },
   data() {
     return {
       article: {},
@@ -158,11 +157,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.wiki {
-  a {
-    @apply text-blue-300;
-  }
-}
-</style>
