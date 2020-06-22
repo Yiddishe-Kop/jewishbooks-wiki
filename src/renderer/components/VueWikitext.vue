@@ -22,7 +22,7 @@ export default {
   methods: {
     interceptLinks(e) {
       if (e.target.localName == 'a') {
-        const title = decodeURIComponent(e.target.pathname).replace(/^\//, '');
+        const title = decodeURIComponent(e.target.getAttribute('href').replace(/#.+$/, ''));
         const results = fuzeSearch.search(title);
         console.log({ title }, results);
         if (results.length) {

@@ -10,7 +10,7 @@
 <script>
 import Layout from './layouts/default';
 export default {
-  name: 'jewishbooks-wiki',
+  name: 'Stender',
   components: { Layout },
 };
 </script>
