@@ -9,10 +9,12 @@
       style="min-width: 260px"
     >
       <list
+        :busy="busy"
         :checkbox="i === 0"
         :list="col"
         :size="i === 0 ? 'large' : 'medium'"
         :ref="`column${i}`"
+        @download-category="$emit('download-category', $event)"
         @select="selectItem($event, i)"
         @check="$emit('check', $event)"
       />
@@ -26,7 +28,7 @@ import List from './List';
 export default {
   name: 'TreeView',
   components: { List },
-  props: ['categories'],
+  props: ['categories', 'busy'],
   data() {
     return {
       columns: [this.categories],

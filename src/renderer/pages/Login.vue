@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center p-6 text-gray-100 rounded-md">
       <div class="text-center">
         <logo class="inline-block w-12 h-auto mx-auto" :rotate="false" />
-        <h1 class="mt-2 text-xl font-thin text-gray-400">אוצר הספרים השיתופי</h1>
+        <h1 class="mt-2 text-xl font-thin text-gray-400">סטנדר</h1>
         <h2 class="mt-2 text-5xl font-extrabold leading-9 text-center text-gray-200 siddur">
           ברוכים הבאים!
         </h2>

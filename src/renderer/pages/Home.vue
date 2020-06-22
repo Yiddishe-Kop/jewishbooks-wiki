@@ -11,7 +11,7 @@
       <div class="flex mt-4 mr-4">
         <span class="mr-3 rounded-md shadow-sm">
           <button
-            @click="downloadCategoryPages"
+            @click="downloadSelectedCategoryPages"
             :class="[
               online && hasSelectedCategories
                 ? 'bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700'
@@ -35,7 +35,13 @@
       class="mt-4"
     />
 
-    <tree-view :categories="categories" @check="checkCategory" class="mt-6" />
+    <tree-view
+      :categories="categories"
+      @download-category="downloadCategory"
+      @check="checkCategory"
+      :busy="progress.active"
+      class="mt-6"
+    />
   </div>
 </template>
 
@@ -68,9 +74,15 @@ export default {
 
   methods: {
     ...mapActions('Articles', ['store']),
-    async downloadCategoryPages() {
-      let pageIds = this.categories
-        .filter(cat => cat.selected)
+    downloadCategory(category) {
+      this.downloadCategoryPages([category]);
+    },
+    downloadSelectedCategoryPages() {
+      const categories = this.categories.filter(cat => cat.selected);
+      this.downloadCategoryPages(categories);
+    },
+    async downloadCategoryPages(categories) {
+      let pageIds = categories
         .reduce(flat, [])
         .filter(c => c.type == 'page')
         .map(c => c.pageid); // maybe add the title? 🤔
@@ -86,7 +98,7 @@ export default {
       };
 
       for (const pageId of pageIds) {
-        this.progress.currentTitle = pageId;
+        this.progress.currentTitle = this.$jewishBooks.pages.find(p => p.pageid == pageId).title;
         this.progress.done++;
         const pageContent = await this.$wiki.getArticle(pageId);
         this.store({

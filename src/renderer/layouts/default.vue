@@ -44,7 +44,7 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div class="flex items-center justify-end h-16 px-4 sm:px-0">
             <div class="w-3 h-3 ml-4 rounded-full" :class="online ? 'bg-green-400' : 'bg-orange-400'"></div>
-            <div class="flex items-center ml-4 md:ml-6">
+            <div class="flex items-center">
               <button
                 @click="searchIsOpen = !searchIsOpen"
                 class="p-1 text-gray-400 border-2 border-transparent rounded-full focus:outline-none hover:text-white focus:focus:outline-none focus:text-white focus:bg-gray-700"
@@ -60,9 +60,7 @@
               </button>
 
               <!-- Profile dropdown -->
-              <div class="relative mr-3">
-                <user-avatar />
-              </div>
+              <user-avatar />
             </div>
           </div>
         </div>

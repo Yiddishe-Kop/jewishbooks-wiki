@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between text-gray-500">
       <div>
         {{ label }}:
-        <span class="text-gray-900">{{ currentTitle }}</span>
+        <span class="font=bold text-gray-900">{{ currentTitle }}</span>
       </div>
       <div class="text-gray-900">{{ percentageDone }}%</div>
     </div>

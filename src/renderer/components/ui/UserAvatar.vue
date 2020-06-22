@@ -5,11 +5,9 @@
         @click="open = !open"
         class="max-w-xs overflow-hidden text-sm rounded-full focus:outline-none focus:shadow-outline"
       >
-        <img
-          class="w-8 h-8"
-          src="https://halpern.yiddishe-kop.com/img/users/NQ5WccXhHPSqLDUbsKWQN6VGMTgMA6dRAJvsRzB9.jpeg/656455b5e11f1cb983323323506df3e213b27167921c9ff70ab04a333d60adfb/NQ5WccXhHPSqLDUbsKWQN6VGMTgMA6dRAJvsRzB9.jpg?w=40&h=40&fit=crop"
-          alt
-        />
+        <span class="inline-flex items-center justify-center w-10 h-10 bg-gray-500 rounded-full">
+          <span class="font-medium leading-none text-white">{{ initials(user.name) }}</span>
+        </span>
       </button>
     </div>
     <span
@@ -66,6 +64,15 @@ export default {
     ...mapActions('App', ['showLogin', 'logoutUser']),
     openSettings() {
       this.$router.push('/settings');
+    },
+    initials(name) {
+      return name.split(' ').reduce((acc, val) => {
+        if (val) {
+          return (acc += val[0]);
+        } else {
+          return acc;
+        }
+      }, '');
     },
   },
   computed: {

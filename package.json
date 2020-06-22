@@ -1,9 +1,9 @@
 {
-  "name": "jewishbooks-wiki",
-  "version": "0.0.5",
+  "name": "stender",
+  "version": "0.1.0",
   "author": "Yehuda Neufeld <newgraphil@gmail.com>",
   "description": "Edit Jewishbooks Wiki offline",
-  "license": null,
+  "license": "",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder -wm",

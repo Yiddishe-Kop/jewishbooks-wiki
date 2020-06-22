@@ -36,7 +36,16 @@
             </div>
           </div>
         </div>
-        <div v-if="item.type == 'subcat'" class="actions">
+        <div v-if="item.type == 'subcat'" class="flex items-center actions">
+          <button
+            v-if="!checkbox && !busy"
+            title="הורד קטגוריה זו"
+            @click="$emit('download-category', item)"
+            :class="[online ? '' : 'opacity-25']"
+            class="relative inline-flex items-center px-2 py-2 ml-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
+          >
+            <icon name="download" class="w-5 h-5 text-gray-500" />
+          </button>
           <svg class="w-5 h-5 text-gray-700 transform rotate-180" fill="currentColor" viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"
@@ -59,7 +68,7 @@
               v-else
               title="הורד עמוד זה"
               @click="downloadArticle(item.pageid)"
-              :class="[online ? '' : 'opacity-25']"
+              :class="[online && !busy ? '' : 'opacity-25']"
               class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
             >
               <icon name="download" class="w-5 h-5 text-gray-500" />
@@ -76,7 +85,7 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'List',
-  props: ['list', 'size', 'checkbox'],
+  props: ['list', 'size', 'checkbox', 'busy'],
   data() {
     return {
       selected: null,
@@ -92,14 +101,13 @@ export default {
       return !!this.articles.find(a => a.id == id);
     },
     async downloadArticle(id) {
-      if (!this.online) return;
+      if (this.busy || !this.online) return;
       const pageContent = await this.$wiki.getArticle(id);
       console.log(`Downloaded page ${id}...`, { pageContent });
       await this.store({
         id,
         content: pageContent,
       });
-      console.log('KKK!!!');
     },
     select(item, i) {
       this.selected = i;
