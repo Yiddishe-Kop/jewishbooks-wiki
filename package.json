@@ -65,6 +65,7 @@
     "fuse.js": "^3.4.6",
     "lodash": "^4.17.15",
     "nodemw": "^0.13.0",
+    "sass": "^1.45.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
@@ -72,7 +73,6 @@
     "win-ca": "^3.2.1"
   },
   "devDependencies": {
-    "tailwindcss": "^1.4.6",
     "@tailwindcss/ui": "^0.3.0",
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",
@@ -98,10 +98,10 @@
     "mini-css-extract-plugin": "0.4.0",
     "multispinner": "^0.2.1",
     "node-loader": "^0.6.0",
-    "node-sass": "^4.9.2",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.21.0",
+    "tailwindcss": "^1.4.6",
     "url-loader": "^1.0.1",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^15.2.4",
