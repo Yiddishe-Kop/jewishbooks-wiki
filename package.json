@@ -59,7 +59,7 @@
     }
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "deepmerge": "^4.2.2",
     "electron-store": "^5.1.1",
     "fuse.js": "^3.4.6",
@@ -89,7 +89,7 @@
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "9.0.0",
+    "electron": "11.5.0",
     "electron-builder": "22.6.1",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
