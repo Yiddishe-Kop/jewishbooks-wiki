@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, globalShortcut, dialog } from 'electron'
+import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron';
 // import store from '../renderer/store'
 
 /**
@@ -6,13 +6,11 @@ import { app, BrowserWindow, ipcMain, globalShortcut, dialog } from 'electron'
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\');
 }
 
-let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+let mainWindow;
+const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
 
 function createWindow() {
   /**
@@ -27,61 +25,59 @@ function createWindow() {
     webPreferences: {
       devTools: true,
       nodeIntegration: true,
-      nodeIntegrationInWorker: true
-    }
-  })
+      nodeIntegrationInWorker: true,
+    },
+  });
 
-  mainWindow.loadURL(winURL)
+  mainWindow.loadURL(winURL);
 
   mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+    mainWindow = null;
+  });
 }
 
 function registerKeyboardShortcuts() {
   globalShortcut.register('CommandOrControl+Left', () => {
     BrowserWindow.getFocusedWindow().webContents.executeJavaScript('window.history.back()');
-  })
+  });
   globalShortcut.register('CommandOrControl+Right', () => {
     BrowserWindow.getFocusedWindow().webContents.executeJavaScript('window.history.forward()');
-  })
+  });
   globalShortcut.register('CommandOrControl+F', () => {
     BrowserWindow.getFocusedWindow().webContents.executeJavaScript(`
       window.dispatchEvent(new Event('open-search'))
     `);
-  })
+  });
 }
 
 // broadcast Vuex mutations
 ipcMain.on('login', (event, user) => {
-  BrowserWindow.getAllWindows().forEach(window => {
-    window.webContents.send(
-      'login',
-      user
-    );
-  })
+  BrowserWindow.getAllWindows().forEach((window) => {
+    window.webContents.send('login', user);
+  });
 });
 
 app.on('ready', () => {
-  createWindow()
-  registerKeyboardShortcuts()
-})
+  addNetfreeCertificateSupport();
+  createWindow();
+  registerKeyboardShortcuts();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
-})
+});
 
 app.on('before-quit', () => {
   // sequelize.close()
-})
+});
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow()
+    createWindow();
   }
-})
+});
 
 /**
  * Auto Updater
@@ -102,3 +98,20 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
+
+function addNetfreeCertificateSupport() {
+  if (!process.env.NODE_EXTRA_CA_CERTS) return;
+  try {
+    var netfreeCa = require('fs').readFileSync(process.env.NODE_EXTRA_CA_CERTS);
+  } catch (e) {
+    return;
+  }
+
+  var NativeSecureContext = process.binding('crypto').SecureContext;
+  var oldaddRootCerts = NativeSecureContext.prototype.addRootCerts;
+  NativeSecureContext.prototype.addRootCerts = function () {
+    var ret = oldaddRootCerts.apply(this, arguments);
+    this.addCACert(netfreeCa);
+    return ret;
+  };
+}

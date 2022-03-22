@@ -82,9 +82,10 @@ export default {
         total: this.myChanges.length,
         done: 0,
       };
-      const loginResult = await this.$wiki.logIn(this.auth.user.name, this.auth.user.password);
-      console.log({ loginResult });
       try {
+        const loginResult = await this.$wiki.logIn(this.auth.user.name, this.auth.user.password);
+        console.log({ loginResult });
+        
         for (const change of this.myChanges) {
           this.progress.currentTitle = change.title;
           this.progress.done++;
