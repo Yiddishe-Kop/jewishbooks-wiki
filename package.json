@@ -63,7 +63,7 @@
     "deepmerge": "^4.2.2",
     "electron-store": "^5.1.1",
     "fuse.js": "^3.4.6",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "nodemw": "^0.13.0",
     "sass": "^1.45.0",
     "vue": "^2.5.16",
