@@ -46,6 +46,3 @@ export default {
   props: ['items'],
 };
 </script>
-
-<style>
-</style>

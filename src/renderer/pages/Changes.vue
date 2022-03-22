@@ -17,7 +17,7 @@
                 ? 'bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700'
                 : 'bg-indigo-100',
             ]"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out border border-transparent rounded-md"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out border border-transparent rounded-md "
           >
             <icon name="upload-cloud" class="w-5 ml-2" />
             העלה כל השינויים
@@ -102,6 +102,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

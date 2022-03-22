@@ -1,4 +1,4 @@
-import JewishBooks from '../helpers/JewishBooks'
+import JewishBooks from '../helpers/JewishBooks';
 import Fuse from 'fuse.js';
 
 export default new Fuse(JewishBooks.pages, {

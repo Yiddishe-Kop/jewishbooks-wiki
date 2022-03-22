@@ -17,6 +17,3 @@ export default {
   props: ['article'],
 };
 </script>
-
-<style>
-</style>

@@ -1,4 +1,4 @@
-import createPersistedState from "./persisted-state"
+import createPersistedState from './persisted-state';
 // import createSharedMutations from "./shared-mutations"
 
-export { createPersistedState }
+export { createPersistedState };

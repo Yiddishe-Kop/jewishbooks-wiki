@@ -2,13 +2,12 @@ import catTree from '../assets/categoryTree.json';
 import uniqBy from 'lodash/uniqBy';
 
 class JewishBooks {
-
   constructor() {
     this.categoryTree = catTree;
     this.pages = this.flattenPages();
   }
 
-  flattenPages = function () {
+  flattenPages = function() {
     const flattenObject = ob => {
       var toReturn = {};
 
@@ -41,7 +40,7 @@ class JewishBooks {
       }
     }
     return uniqBy(searchList, 'pageid');
-  }
+  };
 }
 
-export default new JewishBooks()
+export default new JewishBooks();

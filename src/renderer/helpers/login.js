@@ -1,8 +1,6 @@
 const openLoginWindow = () => {
-  const winURL = process.env.NODE_ENV === 'development'
-    ? `http://localhost:9080#login`
-    : `file://${__dirname}/index.html#login`
-
+  const winURL =
+    process.env.NODE_ENV === 'development' ? `http://localhost:9080#login` : `file://${__dirname}/index.html#login`;
 
   const { BrowserWindow } = require('electron').remote;
   const win = new BrowserWindow({
@@ -17,11 +15,11 @@ const openLoginWindow = () => {
     webPreferences: {
       devTools: false,
       nodeIntegration: true,
-      nodeIntegrationInWorker: true
-    }
+      nodeIntegrationInWorker: true,
+    },
   });
 
   win.loadURL(winURL);
-}
+};
 
-export default openLoginWindow
+export default openLoginWindow;
