@@ -29,7 +29,9 @@
                   <loader v-else class="inline" />
                 </button>
               </span>
-              <p v-if="isLoading" class="mt-1 text-sm leading-5 text-gray-700">מוריד: {{ currentlyLoading }}</p>
+              <p v-if="isLoading" class="mt-1 text-sm leading-5 text-gray-700">
+                מוריד: <strong>{{ currentlyLoading }}</strong>
+              </p>
               <p class="mt-1 text-sm leading-5 text-gray-500">
                 פעולה זה מצריך חיבור לרשת ועלול לקחת זמן
               </p>
@@ -69,17 +71,14 @@ export default {
       const rootCats = await this.$wiki.getSubcategories('קטגוריה:עץ קטגוריות ראשי');
 
       // debugging =====================
-      const isDebug = false;
-      const limit = 12;
-      let level = 0;
+      const depthLimit = 10;
       // ===============================
 
-      const getChildren = async cats => {
-        if (isDebug && level > limit) return cats;
-        level++;
-        console.log(`level ${level} ${level <= limit || !isDebug}`);
+      const getChildren = async (cats, depth = 0) => {
+        depth++;
+        if (depth > depthLimit) return cats;
         if (cats.some(cat => cat.type == 'subcat' && !cat.subcats)) {
-          console.log('diving deeper...', cats);
+          // console.log('diving deeper...', cats);
           try {
             for (const cat of cats) {
               if (cat.type == 'subcat') {
@@ -94,11 +93,11 @@ export default {
                     console.log('TERMINATING INFINITE LOOP', cat.title);
                     return cachedCat.subcats;
                   }
-                  console.log('...Using cache', cat.title);
+                  // console.log('...Using cache', cat.title);
                   cachedCat.visited = true; // my solution to overcome infinite loops in category relations
                   subcats = cachedCat.subcats; // use from cache
                 } else {
-                  console.log('...Fetching fresh', cat.title);
+                  // console.log('...Fetching fresh', cat.title);
                   subcats = await this.$wiki.getSubcategories(cat.title); // THE ACTUAL WORK - fetch category members
                   // add to cache
                   this.cachedCats[cat.title] = {
@@ -106,7 +105,8 @@ export default {
                     subcats,
                   };
                 }
-                cat.subcats = await getChildren(subcats); // recursively fetch children
+                console.log('going deeper: ', depth);
+                cat.subcats = await getChildren(subcats, depth); // recursively fetch children
               }
             }
           } catch (err) {
@@ -114,15 +114,16 @@ export default {
           }
         } else {
           // this.progress.current = cats.length ? cats[0].title : '---';
-          console.log('coming out...', cats);
+          // console.log('coming out...', cats);
         }
+        console.log('coming out...', depth);
         return cats;
       };
 
       try {
         const catTree = await getChildren(rootCats);
         console.log('Saving file...', catTree);
-        !isDebug && this.writeFile(catTree);
+        this.writeFile(catTree);
       } catch (err) {
         console.error('inner', err);
       }
@@ -132,6 +133,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

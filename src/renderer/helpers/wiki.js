@@ -47,7 +47,7 @@ export default class wikiAPI {
    * Get all Talk pages in the wiki
    */
   getAllTalkPages = util.promisify(callback => {
-    this.Bot.log('Getting all talk pages...');
+    // this.Bot.log('Getting all talk pages...');
     this.Bot.getAll(
       {
         action: 'query',
@@ -66,7 +66,7 @@ export default class wikiAPI {
    * @param {string} catTitle - The category title
    */
   getSubcategories = util.promisify((catTitle, callback) => {
-    this.Bot.log('Getting category tree...');
+    // this.Bot.log('Getting category tree...');
     this.Bot.getAll(
       {
         action: 'query',
@@ -85,7 +85,7 @@ export default class wikiAPI {
    * @param {string} category - The category title
    */
   getPagesInCategory = util.promisify((category, callback) => {
-    this.Bot.log(`Getting pages from ${category}...`);
+    // this.Bot.log(`Getting pages from ${category}...`);
 
     this.Bot.getAll(
       {
