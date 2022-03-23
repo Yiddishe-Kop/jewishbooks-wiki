@@ -1,12 +1,16 @@
 import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron';
-// import store from '../renderer/store'
+// UNSECURE but the only way this thing works 🤪
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
+// import store from '../renderer/store'
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\');
+  global.__static = require('path')
+    .join(__dirname, '/static')
+    .replace(/\\/g, '\\\\');
 }
 
 let mainWindow;
@@ -52,7 +56,7 @@ function registerKeyboardShortcuts() {
 
 // broadcast Vuex mutations
 ipcMain.on('login', (event, user) => {
-  BrowserWindow.getAllWindows().forEach((window) => {
+  BrowserWindow.getAllWindows().forEach(window => {
     window.webContents.send('login', user);
   });
 });
@@ -109,7 +113,7 @@ function addNetfreeCertificateSupport() {
 
   var NativeSecureContext = process.binding('crypto').SecureContext;
   var oldaddRootCerts = NativeSecureContext.prototype.addRootCerts;
-  NativeSecureContext.prototype.addRootCerts = function () {
+  NativeSecureContext.prototype.addRootCerts = function() {
     var ret = oldaddRootCerts.apply(this, arguments);
     this.addCACert(netfreeCa);
     return ret;

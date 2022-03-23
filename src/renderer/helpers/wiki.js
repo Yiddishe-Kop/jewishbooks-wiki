@@ -46,7 +46,7 @@ export default class wikiAPI {
   /**
    * Get all Talk pages in the wiki
    */
-  getAllTalkPages = util.promisify((callback) => {
+  getAllTalkPages = util.promisify(callback => {
     this.Bot.log('Getting all talk pages...');
     this.Bot.getAll(
       {
