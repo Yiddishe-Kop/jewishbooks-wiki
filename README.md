@@ -1,4 +1,4 @@
-# jewishbooks-wiki
+# stender
 
 > Edit Jewishbooks Wiki offline
 

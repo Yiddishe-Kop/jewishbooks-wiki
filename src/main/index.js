@@ -41,6 +41,7 @@ function createWindow() {
 }
 
 function registerKeyboardShortcuts() {
+  if (process.env.NODE_ENV != 'production') return;
   globalShortcut.register('CommandOrControl+Left', () => {
     BrowserWindow.getFocusedWindow().webContents.executeJavaScript('window.history.back()');
   });

@@ -16,7 +16,7 @@
           <span class="mr-4">{{ change.summary }}</span>
         </p>
       </div>
-      <div class="relative flex">
+      <div class="relative flex whitespace-no-wrap">
         <router-link
           :to="`/articles/${encodeURIComponent(title)}/${article.id}`"
           class="flex items-center p-2 ml-2 text-red-500 transition bg-red-100 rounded-md shadow hover:bg-red-200"

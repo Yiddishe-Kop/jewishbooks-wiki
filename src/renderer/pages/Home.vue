@@ -1,29 +1,31 @@
 <template>
   <div>
-    <div class="md:flex md:items-center md:justify-between">
-      <div class="flex-1 min-w-0">
-        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
-          <icon name="home" class="inline-block w-6" />
-          עץ קטגוריות ראשי
-        </h2>
-        <p class="text-gray-600">{{ online ? 'סמן קטגוריות שברצונך להוריד למחשב שלך' : 'תפריט של כל הקטגוריות' }}</p>
-      </div>
-      <div class="flex mt-4 mr-4">
-        <span class="mr-3 rounded-md shadow-sm">
-          <button
-            @click="downloadSelectedCategoryPages"
-            :class="[
-              online && hasSelectedCategories
-                ? 'bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700'
-                : 'bg-indigo-100',
-            ]"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out border border-transparent rounded-md"
-          >
-            <icon name="download" class="w-5 ml-2" />
-            הורד
-          </button>
-        </span>
-      </div>
+    <div class="min-w-0 ">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
+        <icon name="home" class="inline-block w-6" />
+        עץ קטגוריות ראשי
+      </h2>
+      <p class="text-gray-600">{{ online ? 'סמן קטגוריות שברצונך להוריד למחשב שלך' : 'תפריט של כל הקטגוריות' }}</p>
+    </div>
+    <div class="flex items-center mt-4">
+      <small v-if="articles.length">{{ articles.length }} דפים נשמרו במחשב שלך</small>
+      <button v-if="articles.length" @click="destroyAll" class="mx-2">
+        <icon name="trash" class="inline-block w-5 text-red-500" />
+      </button>
+      <span class="mr-3 rounded-md shadow-sm">
+        <button
+          @click="downloadSelectedCategoryPages"
+          :class="[
+            online && hasSelectedCategories
+              ? 'bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700'
+              : 'bg-indigo-100',
+          ]"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out border border-transparent rounded-md"
+        >
+          <icon name="download" class="w-5 ml-2" />
+          הורד
+        </button>
+      </span>
     </div>
 
     <task-progress
@@ -73,7 +75,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('Articles', ['store']),
+    ...mapActions('Articles', ['store', 'getArticle', 'destroyAll']),
     downloadCategory(category) {
       this.downloadCategoryPages([category]);
     },
@@ -100,6 +102,11 @@ export default {
       for (const pageId of pageIds) {
         this.progress.currentTitle = this.$jewishBooks.pages.find(p => p.pageid == pageId).title;
         this.progress.done++;
+
+        if (await this.getArticle(pageId)) {
+          continue; // already offline
+        }
+
         const pageContent = await this.$wiki.getArticle(pageId);
         this.store({
           id: pageId,
@@ -126,9 +133,5 @@ export default {
       this.$set(this.categories[e.i], 'selected', e.value);
     },
   },
-  async mounted() {},
 };
 </script>
-
-<style>
-</style>
