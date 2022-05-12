@@ -57,7 +57,7 @@ export default {
   components: { TreeView, TaskProgress },
   data() {
     return {
-      categories: this.$jewishBooks.categoryTree,
+      categories: [],
       progress: {
         active: false,
         currentTitle: '',
@@ -132,6 +132,10 @@ export default {
     checkCategory(e) {
       this.$set(this.categories[e.i], 'selected', e.value);
     },
+  },
+  async mounted() {
+    await this.$jewishBooks.buildCategoryTree();
+    this.categories = this.$jewishBooks.categoryTree;
   },
 };
 </script>

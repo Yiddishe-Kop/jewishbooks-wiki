@@ -35,6 +35,12 @@ export default {
     };
   },
   watch: {
+    categories: {
+      handler(categories) {
+        this.columns = [categories];
+      },
+      deep: true,
+    },
     '$route.query': {
       immediate: true,
       handler: function() {
@@ -57,5 +63,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

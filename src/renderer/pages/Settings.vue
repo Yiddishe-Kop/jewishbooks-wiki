@@ -59,7 +59,7 @@ export default {
   methods: {
     async writeFile(data) {
       this.isLoading = true;
-      fs.writeFileSync(path.join(__dirname, '../assets/categoryTree.json'), JSON.stringify(data));
+      fs.writeFileSync(path.join(__dirname, '../../../static/categoryTree.json'), JSON.stringify(data));
       this.isLoading = false;
     },
     async rebuildCategoryTree() {
@@ -68,17 +68,27 @@ export default {
         return;
       }
       this.isLoading = true;
+
       const rootCats = await this.$wiki.getSubcategories('קטגוריה:עץ קטגוריות ראשי');
 
       // debugging =====================
       const depthLimit = 10;
       // ===============================
+      // let counter = 0;
 
-      const getChildren = async (cats, depth = 0) => {
+      const getChildren = async (cats, rootCats, depth = 0) => {
+        // counter++;
+
+        // if (counter >= 10) {
+        //   this.writeFile(rootCats); // save progress to file
+        //   console.log('saving progress...', rootCats);
+        //   counter = 0;
+        // }
+
         depth++;
         if (depth > depthLimit) return cats;
         if (cats.some(cat => cat.type == 'subcat' && !cat.subcats)) {
-          // console.log('diving deeper...', cats);
+          console.log('diving deeper...', cats);
           try {
             for (const cat of cats) {
               if (cat.type == 'subcat') {
@@ -106,7 +116,7 @@ export default {
                   };
                 }
                 console.log('going deeper: ', depth);
-                cat.subcats = await getChildren(subcats, depth); // recursively fetch children
+                cat.subcats = await getChildren(subcats, rootCats, depth); // recursively fetch children
               }
             }
           } catch (err) {
@@ -121,7 +131,7 @@ export default {
       };
 
       try {
-        const catTree = await getChildren(rootCats);
+        const catTree = await getChildren(rootCats, rootCats);
         console.log('Saving file...', catTree);
         this.writeFile(catTree);
       } catch (err) {

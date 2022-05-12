@@ -1,14 +1,23 @@
-import catTree from '../assets/categoryTree.json';
+import Vue from 'vue';
 import uniqBy from 'lodash/uniqBy';
 
 class JewishBooks {
+  categoryTree = [];
+  rootCategories = Vue.observable([]);
+  loading = false;
 
-  constructor() {
-    this.categoryTree = catTree;
+  async buildCategoryTree() {
+    // this.categoryTree = catTree;
+    if (this.loading || this.categoryTree.length) return;
+    this.loading = true;
+
+    this.categoryTree = await (await fetch('static/categoryTree.json')).json();
+    this.rootCategories = this.categoryTree.map(cat => cat.title);
     this.pages = this.flattenPages();
+    this.loading = false;
   }
 
-  flattenPages = function () {
+  flattenPages = function() {
     const flattenObject = ob => {
       var toReturn = {};
 
@@ -41,7 +50,7 @@ class JewishBooks {
       }
     }
     return uniqBy(searchList, 'pageid');
-  }
+  };
 }
 
-export default new JewishBooks()
+export default new JewishBooks();

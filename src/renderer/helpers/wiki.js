@@ -62,6 +62,13 @@ export default class wikiAPI {
   });
 
   /**
+   * Get an array of ALL categoriy names in the wiki
+   */
+  getCategories = util.promisify((catTitle, callback) => {
+    this.Bot.getCategories(callback);
+  });
+
+  /**
    * Get all Subcategories of a category
    * @param {string} catTitle - The category title
    */

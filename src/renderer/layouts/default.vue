@@ -23,8 +23,8 @@
     </div>
     <section class="h-full p-1 overflow-y-auto bg-gray-400" style="width: 220px">
       <h1 class="mt-4 text-xl font-semibold">קטגוריות</h1>
-      <ul v-if="categories.length" class="mt-3 space-y-1">
-        <li v-for="(cat, i) in categories" :key="cat">
+      <ul v-if="$jewishBooks.rootCategories.length" class="mt-3 space-y-1">
+        <li v-for="(cat, i) in $jewishBooks.rootCategories" :key="cat">
           <router-link
             exact-active-class="text-teal-800 bg-teal-100 hover:bg-teal-200"
             :to="{ name: 'home', query: { cat: i } }"
@@ -86,7 +86,6 @@ export default {
   components: { Logo, Search, UserAvatar },
   data() {
     return {
-      categories: this.$jewishBooks.categoryTree.map(cat => cat.title),
       searchIsOpen: false,
     };
   },
@@ -120,7 +119,7 @@ export default {
       navigator.onLine ? this.goOnline() : this.goOffline();
     },
   },
-  mounted() {
+  async mounted() {
     window.addEventListener('online', this.monitorOnlineStatus);
     window.addEventListener('offline', this.monitorOnlineStatus);
     window.addEventListener('open-search', () => (this.searchIsOpen = true));
