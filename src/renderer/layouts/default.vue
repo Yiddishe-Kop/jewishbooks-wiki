@@ -124,6 +124,7 @@ export default {
     window.addEventListener('offline', this.monitorOnlineStatus);
     window.addEventListener('open-search', () => (this.searchIsOpen = true));
     this.monitorOnlineStatus();
+    await this.$jewishBooks.buildCategoryTree();
   },
 };
 </script>

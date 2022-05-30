@@ -1,10 +1,12 @@
 import Vue from 'vue';
+import Fuse from 'fuse.js';
 import uniqBy from 'lodash/uniqBy';
 
 class JewishBooks {
   categoryTree = [];
   rootCategories = Vue.observable([]);
   loading = false;
+  fuzeSearch;
 
   async buildCategoryTree() {
     // this.categoryTree = catTree;
@@ -14,6 +16,13 @@ class JewishBooks {
     this.categoryTree = await (await fetch('static/categoryTree.json')).json();
     this.rootCategories = this.categoryTree.map(cat => cat.title);
     this.pages = this.flattenPages();
+
+    this.fuzeSearch = new Fuse(this.pages, {
+      threshold: 0.3,
+      keys: ['title'],
+    });
+    console.log(this.fuzeSearch);
+
     this.loading = false;
   }
 

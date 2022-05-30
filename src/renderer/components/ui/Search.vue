@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import fuzeSearch from '../../helpers/search';
 import throttle from 'lodash/throttle';
 
 const MAX_SEARCH_RESULTS = 50;
@@ -73,11 +72,14 @@ export default {
   watch: {
     search: {
       handler: throttle(function(newVal) {
-        const results = fuzeSearch.search(this.search);
-        this.results = results.slice(0, MAX_SEARCH_RESULTS);
         if (newVal.length == 0) {
           this.selected = 0;
+          return;
         }
+        console.log(this.$jewishBooks, this.$jewishBooks.fuzeSearch);
+        const results = this.$jewishBooks.fuzeSearch.search(this.search);
+        console.log({ results });
+        this.results = results.slice(0, MAX_SEARCH_RESULTS);
       }, 200),
     },
     isOpen(isOpen) {

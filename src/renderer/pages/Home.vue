@@ -38,6 +38,7 @@
     />
 
     <tree-view
+      v-if="categories.length"
       :categories="categories"
       @download-category="downloadCategory"
       @check="checkCategory"
@@ -134,8 +135,14 @@ export default {
     },
   },
   async mounted() {
-    await this.$jewishBooks.buildCategoryTree();
-    this.categories = this.$jewishBooks.categoryTree;
+    if (!this.$jewishBooks.categoryTree.length) {
+      // HACK: wait for the tree to be loaded
+      setTimeout(() => {
+        this.categories = this.$jewishBooks.categoryTree;
+      }, 2500);
+    } else {
+      this.categories = this.$jewishBooks.categoryTree;
+    }
   },
 };
 </script>

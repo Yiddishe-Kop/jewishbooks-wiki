@@ -69,7 +69,7 @@ export default {
       }
       this.isLoading = true;
 
-      const rootCats = await this.$wiki.getSubcategories('קטגוריה:ספרים_קיימים');
+      const rootCats = await this.$wiki.getSubcategories('קטגוריה:סטנדר');
 
       // debugging =====================
       const depthLimit = 10;

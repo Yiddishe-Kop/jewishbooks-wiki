@@ -4,7 +4,6 @@
 
 <script>
 import wiky from '../helpers/parser/wiky';
-import fuzeSearch from '../helpers/search';
 
 export default {
   name: 'VueWikitext',
@@ -22,8 +21,10 @@ export default {
   methods: {
     interceptLinks(e) {
       if (e.target.localName == 'a') {
+        let string = e.target.getAttribute('href').replace(/#.+$/, '');
+        console.log(e.target);
         const title = decodeURIComponent(e.target.getAttribute('href').replace(/#.+$/, ''));
-        const results = fuzeSearch.search(title);
+        const results = this.$jewishBooks.fuzeSearch.search(title);
         console.log({ title }, results);
         if (results.length) {
           this.$router.push(`/articles/${encodeURIComponent(results[0].title)}/${results[0].pageid}`);

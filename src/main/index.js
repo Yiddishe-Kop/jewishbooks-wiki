@@ -1,6 +1,9 @@
 import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron';
+import Store from 'electron-store';
 // UNSECURE but the only way this thing works 🤪
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
+Store.initRenderer();
 
 // import store from '../renderer/store'
 /**
@@ -30,6 +33,7 @@ function createWindow() {
       devTools: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
+      enableRemoteModule: true,
     },
   });
 
@@ -54,6 +58,30 @@ function registerKeyboardShortcuts() {
     `);
   });
 }
+
+ipcMain.on('open-login-window', event => {
+  const winURL =
+    process.env.NODE_ENV === 'development' ? `http://localhost:9080#login` : `file://${__dirname}/index.html#login`;
+
+  const win = new BrowserWindow({
+    resizable: false,
+    title: 'Login',
+    frame: false,
+    height: 550,
+    width: 400,
+    useContentSize: true,
+    backgroundColor: '#2d3748',
+    titleBarStyle: 'none',
+    webPreferences: {
+      devTools: false,
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      enableRemoteModule: true,
+    },
+  });
+
+  win.loadURL(winURL);
+});
 
 // broadcast Vuex mutations
 ipcMain.on('login', (event, user) => {
