@@ -64,8 +64,8 @@ export default {
       }
       this.isLoading = true;
 
-      // const rootCats = await this.$wiki.getSubcategories('קטגוריה:סידור_התפילה_ומפרשיו');
-      const rootCats = await this.$wiki.getSubcategories('קטגוריה:סטנדר');
+      const rootCats = await this.$wiki.getSubcategories('קטגוריה:סידור_התפילה_ומפרשיו');
+      // const rootCats = await this.$wiki.getSubcategories('קטגוריה:סטנדר');
 
       // debugging =====================
       const depthLimit = 10;
@@ -129,7 +129,7 @@ export default {
       try {
         const catTree = await getChildren(rootCats, rootCats);
         console.log('Saving file...', catTree);
-        this.$jewishBooks.updateTree(data);
+        this.$jewishBooks.updateTree(catTree);
       } catch (err) {
         console.error('inner', err);
       }

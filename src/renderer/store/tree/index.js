@@ -1,5 +1,5 @@
 import Store from 'electron-store';
-import categoryTree from './categoryTree';
+import categoryTree from '../../../../static/categoryTree.json';
 
 const store = new Store({
   name: 'tree',
