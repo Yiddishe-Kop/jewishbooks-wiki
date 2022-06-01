@@ -64,8 +64,8 @@ export default {
       }
       this.isLoading = true;
 
-      const rootCats = await this.$wiki.getSubcategories('קטגוריה:סידור_התפילה_ומפרשיו');
-      // const rootCats = await this.$wiki.getSubcategories('קטגוריה:סטנדר');
+      // const rootCats = await this.$wiki.getSubcategories('קטגוריה:סידור_התפילה_ומפרשיו');
+      const rootCats = await this.$wiki.getSubcategories('קטגוריה:סטנדר');
 
       // debugging =====================
       const depthLimit = 10;
